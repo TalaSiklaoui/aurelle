@@ -1,23 +1,15 @@
 "use client";
 
-import { Suspense, useState } from "react";
+import { useState } from "react";
 import { signIn } from "next-auth/react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 
 export default function CustomerLoginPage() {
-  return (
-    <Suspense fallback={null}>
-      <LoginForm />
-    </Suspense>
-  );
-}
-
-function LoginForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const oauthError = searchParams.get("error");
-
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -130,7 +122,7 @@ function LoginForm() {
             borderRadius: "3px",
             fontSize: "14px",
             cursor: loading ? "not-allowed" : "pointer",
-            marginBottom: "16px",
+            marginBottom: "1px",
           }}
         >
           {loading ? "Logging in..." : "Log In"}
@@ -138,13 +130,17 @@ function LoginForm() {
 
         <div
           style={{
-            margin: "20px 0",
-            textAlign: "center",
-            fontSize: "12px",
-            color: "var(--gray-text)",
+            display: "flex",
+            alignItems: "center",
+            gap: "12px",
+            margin: "24px 0",
           }}
         >
-          — or —
+          <div style={{ flex: 1, height: "1px", backgroundColor: "#e5e0d8" }} />
+          <span style={{ fontSize: "12px", color: "var(--gray-text)" }}>
+            or
+          </span>
+          <div style={{ flex: 1, height: "1px", backgroundColor: "#e5e0d8" }} />
         </div>
 
         <button
@@ -178,6 +174,7 @@ function LoginForm() {
             fontSize: "13px",
             textAlign: "center",
             color: "var(--gray-text)",
+            marginBottom: "8px",
           }}
         >
           Don't have an account?{" "}
@@ -189,6 +186,24 @@ function LoginForm() {
     </div>
   );
 }
+
+const labelStyle = {
+  display: "block",
+  fontSize: "13px",
+  color: "var(--gray-text)",
+  marginBottom: "6px",
+};
+
+const inputStyle = {
+  width: "100%",
+  padding: "10px 12px",
+  marginBottom: "18px",
+  border: "1px solid #ddd",
+  borderRadius: "3px",
+  fontSize: "14px",
+  fontFamily: "inherit",
+  boxSizing: "border-box",
+};
 
 function GoogleIcon() {
   return (
@@ -212,21 +227,3 @@ function GoogleIcon() {
     </svg>
   );
 }
-
-const labelStyle = {
-  display: "block",
-  fontSize: "13px",
-  color: "var(--gray-text)",
-  marginBottom: "6px",
-};
-
-const inputStyle = {
-  width: "100%",
-  padding: "10px 12px",
-  marginBottom: "18px",
-  border: "1px solid #ddd",
-  borderRadius: "3px",
-  fontSize: "14px",
-  fontFamily: "inherit",
-  boxSizing: "border-box",
-};

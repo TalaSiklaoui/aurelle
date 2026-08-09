@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 export default function AdminLoginPage() {
   const [email, setEmail] = useState("");
@@ -61,6 +62,18 @@ export default function AdminLoginPage() {
           }}
         >
           Admin Login
+          <Link
+            href="/"
+            style={{
+              display: "inline-block",
+              fontSize: "13px",
+              color: "var(--gray-text)",
+              textDecoration: "none",
+              marginBottom: "20px",
+            }}
+          >
+            ‹ Back to site
+          </Link>
         </h2>
         <p
           style={{

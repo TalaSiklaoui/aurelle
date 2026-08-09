@@ -56,3 +56,29 @@ export async function sendOrderConfirmationEmail(order) {
     console.error("Failed to send confirmation email:", err);
   }
 }
+
+export async function sendVerificationEmail(email, fullName, token) {
+  const verifyUrl = `${process.env.NEXTAUTH_URL || "http://localhost:3000"}/verify-email?token=${token}`;
+
+  try {
+    await resend.emails.send({
+      from: "AURELLE <onboarding@resend.dev>",
+      to: email,
+      subject: "Verify your AURELLE account",
+      html: `
+        <div style="font-family: sans-serif; max-width: 480px; margin: 0 auto;">
+          <h2 style="font-family: Georgia, serif;">Welcome, ${fullName}!</h2>
+          <p>Please confirm your email to activate your AURELLE account.</p>
+          <a href="${verifyUrl}" style="display: inline-block; background: #1a1a1a; color: #c9a24b; padding: 12px 24px; text-decoration: none; border-radius: 4px; margin: 16px 0;">
+            Verify Email
+          </a>
+          <p style="color: #666; font-size: 13px;">
+            If you didn't create this account, you can ignore this email.
+          </p>
+        </div>
+      `,
+    });
+  } catch (err) {
+    console.error("Failed to send verification email:", err);
+  }
+}

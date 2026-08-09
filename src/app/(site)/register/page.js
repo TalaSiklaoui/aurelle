@@ -14,7 +14,6 @@ export default function RegisterPage() {
 }
 
 function RegisterForm() {
-  const router = useRouter();
   const searchParams = useSearchParams();
   const oauthError = searchParams.get("error");
 
@@ -23,6 +22,7 @@ function RegisterForm() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [registered, setRegistered] = useState(false);
 
   async function handleSubmit(e) {
     e.preventDefault();
@@ -35,28 +35,46 @@ function RegisterForm() {
       body: JSON.stringify({ email, password, fullName }),
     });
 
+    setLoading(false);
+
     if (!res.ok) {
       const data = await res.json();
       setError(data.error || "Something went wrong.");
-      setLoading(false);
       return;
     }
 
-    const result = await signIn("customer-login", {
-      email,
-      password,
-      redirect: false,
-    });
+    setRegistered(true);
+  }
 
-    setLoading(false);
-
-    if (result?.error) {
-      setError("Account created, but login failed. Try logging in manually.");
-      return;
-    }
-
-    router.push("/account");
-    router.refresh();
+  if (registered) {
+    return (
+      <div
+        style={{
+          minHeight: "70vh",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          padding: "40px 20px",
+        }}
+      >
+        <div
+          style={{
+            backgroundColor: "#fff",
+            padding: "40px",
+            borderRadius: "8px",
+            border: "1px solid #f0eee9",
+            maxWidth: "380px",
+            textAlign: "center",
+          }}
+        >
+          <h2 style={{ marginBottom: "12px" }}>Check Your Email</h2>
+          <p style={{ color: "var(--gray-text)" }}>
+            We sent a verification link to <strong>{email}</strong>. Click it to
+            activate your account.
+          </p>
+        </div>
+      </div>
+    );
   }
 
   return (
@@ -164,13 +182,17 @@ function RegisterForm() {
 
         <div
           style={{
-            margin: "20px 0",
-            textAlign: "center",
-            fontSize: "12px",
-            color: "var(--gray-text)",
+            display: "flex",
+            alignItems: "center",
+            gap: "12px",
+            margin: "24px 0",
           }}
         >
-          — or —
+          <div style={{ flex: 1, height: "1px", backgroundColor: "#e5e0d8" }} />
+          <span style={{ fontSize: "12px", color: "var(--gray-text)" }}>
+            or
+          </span>
+          <div style={{ flex: 1, height: "1px", backgroundColor: "#e5e0d8" }} />
         </div>
 
         <button

@@ -18,7 +18,7 @@ export default function AdminSidebar() {
     <aside
       style={{
         width: "240px",
-        minHeight: "100vh",
+        height: "100vh",
         backgroundColor: "var(--black)",
         color: "#fff",
         padding: "32px 20px",

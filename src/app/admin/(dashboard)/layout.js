@@ -2,7 +2,7 @@ import AdminSidebar from "@/components/admin/AdminSidebar";
 
 export default function DashboardLayout({ children }) {
   return (
-    <div style={{ display: "flex" }}>
+    <div style={{ display: "flex", alignItems: "flex-start" }}>
       <AdminSidebar />
       <main
         style={{

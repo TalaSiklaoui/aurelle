@@ -51,11 +51,13 @@ model AdminUser {
 }
 
 model Customer {
-  id        Int      @id @default(autoincrement())
-  email     String   @unique
-  password  String?
-  fullName  String
-  createdAt DateTime @default(now())
+  id                Int      @id @default(autoincrement())
+  email             String   @unique
+  password          String?
+  fullName          String
+  emailVerified     Boolean  @default(false)
+  verificationToken String?  @unique
+  createdAt         DateTime @default(now())
 }
 
 model ContactMessage {
