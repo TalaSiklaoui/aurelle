@@ -1,15 +1,23 @@
 "use client";
 
-import { useState } from "react";
+import { Suspense, useState } from "react";
 import { signIn } from "next-auth/react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
-import { useSearchParams } from "next/navigation";
 
 export default function CustomerLoginPage() {
+  return (
+    <Suspense fallback={null}>
+      <LoginForm />
+    </Suspense>
+  );
+}
+
+function LoginForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const oauthError = searchParams.get("error");
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -122,7 +130,7 @@ export default function CustomerLoginPage() {
             borderRadius: "3px",
             fontSize: "14px",
             cursor: loading ? "not-allowed" : "pointer",
-            marginBottom: "1px",
+            marginBottom: "16px",
           }}
         >
           {loading ? "Logging in..." : "Log In"}
@@ -174,7 +182,6 @@ export default function CustomerLoginPage() {
             fontSize: "13px",
             textAlign: "center",
             color: "var(--gray-text)",
-            marginBottom: "8px",
           }}
         >
           Don't have an account?{" "}
@@ -186,24 +193,6 @@ export default function CustomerLoginPage() {
     </div>
   );
 }
-
-const labelStyle = {
-  display: "block",
-  fontSize: "13px",
-  color: "var(--gray-text)",
-  marginBottom: "6px",
-};
-
-const inputStyle = {
-  width: "100%",
-  padding: "10px 12px",
-  marginBottom: "18px",
-  border: "1px solid #ddd",
-  borderRadius: "3px",
-  fontSize: "14px",
-  fontFamily: "inherit",
-  boxSizing: "border-box",
-};
 
 function GoogleIcon() {
   return (
@@ -227,3 +216,21 @@ function GoogleIcon() {
     </svg>
   );
 }
+
+const labelStyle = {
+  display: "block",
+  fontSize: "13px",
+  color: "var(--gray-text)",
+  marginBottom: "6px",
+};
+
+const inputStyle = {
+  width: "100%",
+  padding: "10px 12px",
+  marginBottom: "18px",
+  border: "1px solid #ddd",
+  borderRadius: "3px",
+  fontSize: "14px",
+  fontFamily: "inherit",
+  boxSizing: "border-box",
+};
