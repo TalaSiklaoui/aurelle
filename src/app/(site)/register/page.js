@@ -1,20 +1,28 @@
 "use client";
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { Suspense, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import { signIn } from "next-auth/react";
-import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 
 export default function RegisterPage() {
+  return (
+    <Suspense fallback={null}>
+      <RegisterForm />
+    </Suspense>
+  );
+}
+
+function RegisterForm() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const oauthError = searchParams.get("error");
+
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
-  const searchParams = useSearchParams();
-  const oauthError = searchParams.get("error");
 
   async function handleSubmit(e) {
     e.preventDefault();
@@ -83,7 +91,7 @@ export default function RegisterPage() {
             marginBottom: "28px",
           }}
         >
-          Welcome to AURELLE! create your account
+          Welcome to AURELLE — create your account
         </p>
 
         <label style={labelStyle}>Full Name</label>
@@ -148,7 +156,7 @@ export default function RegisterPage() {
             borderRadius: "3px",
             fontSize: "14px",
             cursor: loading ? "not-allowed" : "pointer",
-            marginBottom: "1px",
+            marginBottom: "16px",
           }}
         >
           {loading ? "Creating..." : "Create Account"}
@@ -208,24 +216,6 @@ export default function RegisterPage() {
   );
 }
 
-const labelStyle = {
-  display: "block",
-  fontSize: "13px",
-  color: "var(--gray-text)",
-  marginBottom: "6px",
-};
-
-const inputStyle = {
-  width: "100%",
-  padding: "10px 12px",
-  marginBottom: "18px",
-  border: "1px solid #ddd",
-  borderRadius: "3px",
-  fontSize: "14px",
-  fontFamily: "inherit",
-  boxSizing: "border-box",
-};
-
 function GoogleIcon() {
   return (
     <svg width="18" height="18" viewBox="0 0 48 48">
@@ -248,3 +238,21 @@ function GoogleIcon() {
     </svg>
   );
 }
+
+const labelStyle = {
+  display: "block",
+  fontSize: "13px",
+  color: "var(--gray-text)",
+  marginBottom: "6px",
+};
+
+const inputStyle = {
+  width: "100%",
+  padding: "10px 12px",
+  marginBottom: "18px",
+  border: "1px solid #ddd",
+  borderRadius: "3px",
+  fontSize: "14px",
+  fontFamily: "inherit",
+  boxSizing: "border-box",
+};
