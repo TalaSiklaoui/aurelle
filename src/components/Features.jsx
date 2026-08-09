@@ -1,0 +1,131 @@
+const icons = {
+  diamond: (
+    <svg
+      width="28"
+      height="28"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="var(--gold)"
+      strokeWidth="1.5"
+    >
+      <path d="M6 3h12l4 6-10 12L2 9z" />
+      <path d="M2 9h20M9 3l-3 6 6 12 6-12-3-6" />
+    </svg>
+  ),
+  heart: (
+    <svg
+      width="28"
+      height="28"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="var(--gold)"
+      strokeWidth="1.3"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <path d="M12 20s-7-4.5-9.5-9C.8 7.6 2.8 4 6.5 4c2.1 0 3.7 1.2 5.5 3.2C13.8 5.2 15.4 4 17.5 4c3.7 0 5.7 3.6 4 7-2.5 4.5-9.5 9-9.5 9z" />
+    </svg>
+  ),
+
+  shield: (
+    <svg
+      width="28"
+      height="28"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="var(--gold)"
+      strokeWidth="1.2"
+    >
+      <path d="M12 2l8 4v6c0 5-3.5 8.5-8 10-4.5-1.5-8-5-8-10V6z" />
+      <path d="M9 12l2 2 4-4" />
+    </svg>
+  ),
+  box: (
+    <svg
+      width="28"
+      height="28"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="var(--gold)"
+      strokeWidth="1.2"
+    >
+      <path d="M21 8l-9-5-9 5 9 5 9-5z" />
+      <path d="M3 8v8l9 5 9-5V8" />
+      <path d="M12 13v8" />
+    </svg>
+  ),
+};
+
+const features = [
+  {
+    icon: "diamond",
+    title: "Fine Quality",
+    text: "We use the finest materials for lasting elegance.",
+  },
+  {
+    icon: "heart",
+    title: "Handcrafted",
+    text: "Each piece is carefully handcrafted by artisans.",
+  },
+  {
+    icon: "shield",
+    title: "Lifetime Warranty",
+    text: "We stand by our quality with lifetime care.",
+  },
+  {
+    icon: "box",
+    title: "Easy Returns",
+    text: "14-day easy returns for your peace of mind.",
+  },
+];
+
+function Features() {
+  return (
+    <section
+      style={{
+        backgroundColor: "var(--black)",
+        display: "flex",
+        justifyContent: "space-around",
+        padding: "48px 40px",
+        flexWrap: "wrap",
+        gap: "32px",
+      }}
+    >
+      {features.map((feature, index) => (
+        <div key={index} style={{ textAlign: "center", maxWidth: "200px" }}>
+          <div
+            style={{
+              marginBottom: "12px",
+              display: "flex",
+              justifyContent: "center",
+            }}
+          >
+            {icons[feature.icon]}
+          </div>
+          <h3
+            style={{
+              color: "var(--gold)",
+              fontSize: "13px",
+              letterSpacing: "1px",
+              textTransform: "uppercase",
+              marginBottom: "8px",
+            }}
+          >
+            {feature.title}
+          </h3>
+          <p
+            style={{
+              color: "#B8B8B5",
+              fontSize: "13px",
+              lineHeight: "1.6",
+            }}
+          >
+            {feature.text}
+          </p>
+        </div>
+      ))}
+    </section>
+  );
+}
+
+export default Features;
