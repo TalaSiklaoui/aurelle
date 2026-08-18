@@ -32,6 +32,7 @@ function LoginForm() {
       email,
       password,
       redirect: false,
+      redirectTo: "/account",
     });
 
     setLoading(false);
@@ -41,8 +42,7 @@ function LoginForm() {
       return;
     }
 
-    router.push("/account");
-    router.refresh();
+    window.location.href = result?.url || "/account";
   }
 
   return (

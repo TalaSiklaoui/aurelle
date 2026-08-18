@@ -1,8 +1,13 @@
 import { auth, signOut } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { redirect } from "next/navigation";
 
 export default async function AccountPage() {
   const session = await auth();
+
+  if (!session?.user?.email) {
+    redirect("/login");
+  }
 
   const orders = await prisma.order.findMany({
     where: { email: session.user.email },
