@@ -20,6 +20,8 @@ function RegisterForm() {
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [resending, setResending] = useState(false);
+  const [resendMessage, setResendMessage] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [registered, setRegistered] = useState(false);
@@ -72,6 +74,36 @@ function RegisterForm() {
             We sent a verification link to <strong>{email}</strong>. Click it to
             activate your account.
           </p>
+          <button
+            type="button"
+            onClick={handleResend}
+            disabled={resending}
+            style={{
+              width: "100%",
+              padding: "12px",
+              backgroundColor: "var(--black)",
+              color: "var(--gold)",
+              border: "none",
+              borderRadius: "3px",
+              fontSize: "14px",
+              cursor: resending ? "not-allowed" : "pointer",
+              marginTop: "22px",
+            }}
+          >
+            {resending ? "Sending..." : "Resend Verification Email"}
+          </button>
+
+          {resendMessage && (
+            <p
+              style={{
+                fontSize: "13px",
+                color: "var(--gray-text)",
+                marginTop: "14px",
+              }}
+            >
+              {resendMessage}
+            </p>
+          )}
         </div>
       </div>
     );
@@ -236,6 +268,34 @@ function RegisterForm() {
       </form>
     </div>
   );
+
+  async function handleResend() {
+    setResending(true);
+    setResendMessage("");
+
+    try {
+      const res = await fetch("/api/customers/resend-verification", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email }),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        setResendMessage(data.error || "Could not resend verification email.");
+        return;
+      }
+
+      setResendMessage("Verification email sent again. Check your inbox.");
+    } catch {
+      setResendMessage("Could not resend verification email.");
+    } finally {
+      setResending(false);
+    }
+  }
 }
 
 function GoogleIcon() {
