@@ -1,7 +1,7 @@
 "use client";
 
 import { Suspense, useEffect, useState } from "react";
-import { useSearchParams, useRouter } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 
 export default function VerifyEmailPage() {
@@ -14,24 +14,24 @@ export default function VerifyEmailPage() {
 
 function VerifyEmailContent() {
   const searchParams = useSearchParams();
-  const router = useRouter();
   const token = searchParams.get("token");
 
-  const [status, setStatus] = useState("verifying");
+  const [status, setStatus] = useState(token ? "verifying" : "invalid");
 
   useEffect(() => {
-    if (!token) {
-      setStatus("invalid");
-      return;
-    }
+    if (!token) return;
 
     fetch("/api/customers/verify-email", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ token }),
     })
-      .then((res) => (res.ok ? setStatus("success") : setStatus("invalid")))
-      .catch(() => setStatus("invalid"));
+      .then((res) => {
+        setStatus(res.ok ? "success" : "invalid");
+      })
+      .catch(() => {
+        setStatus("invalid");
+      });
   }, [token]);
 
   return (
@@ -53,6 +53,7 @@ function VerifyEmailContent() {
             <p style={{ color: "var(--gray-text)", marginBottom: "24px" }}>
               Your account is now active. You can log in.
             </p>
+
             <Link
               href="/login"
               style={{
@@ -73,7 +74,8 @@ function VerifyEmailContent() {
           <>
             <h2 style={{ marginBottom: "12px" }}>Invalid or Expired Link</h2>
             <p style={{ color: "var(--gray-text)" }}>
-              This verification link isn't valid. Please try registering again.
+              This verification link isn&apos;t valid. Please try registering
+              again.
             </p>
           </>
         )}

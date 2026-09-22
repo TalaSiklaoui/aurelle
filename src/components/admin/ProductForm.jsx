@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 
 const categories = ["Rings", "Necklaces", "Bracelets", "Earrings"];
 
@@ -148,12 +149,12 @@ export default function ProductForm({ initialData }) {
       </div>
 
       {image && !uploading && (
-        <img
+        <Image
           src={image}
           alt="Preview"
+          width={140}
+          height={140}
           style={{
-            width: "140px",
-            height: "140px",
             objectFit: "cover",
             borderRadius: "6px",
             marginBottom: "24px",

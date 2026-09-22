@@ -81,7 +81,7 @@ export default async function AdminDashboard() {
             <p
               style={{
                 fontSize: "28px",
-                fontFamily: "'Playfair Display', serif",
+                fontFamily: "'var(--font-playfair)', serif",
                 margin: 0,
               }}
             >

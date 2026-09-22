@@ -19,7 +19,7 @@ export default function OrderConfirmationPage() {
       >
         ✓
       </div>
-      <h1 style={{ fontFamily: "Playfair Display, serif" }}>Thank You!</h1>
+      <h1 style={{ fontFamily: "var(--font-playfair), serif" }}>Thank You!</h1>
       <p
         style={{
           color: "var(--gray-text)",

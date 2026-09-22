@@ -60,7 +60,7 @@ export default async function OrdersPage() {
                   <p
                     style={{
                       fontSize: "18px",
-                      fontFamily: "'Playfair Display', serif",
+                      fontFamily: "'var(--font-playfair)', serif",
                       marginBottom: "4px",
                     }}
                   >

@@ -23,7 +23,7 @@ export default function AboutPage() {
         >
           <h1
             style={{
-              fontFamily: "Playfair Display, serif",
+              fontFamily: "var(--font-playfair), serif",
               fontSize: "36px",
               marginBottom: "20px",
             }}
@@ -72,7 +72,7 @@ export default function AboutPage() {
       <section style={{ padding: "60px 60px 80px", textAlign: "center" }}>
         <h2
           style={{
-            fontFamily: "Playfair Display, serif",
+            fontFamily: "var(--font-playfair), serif",
             fontSize: "28px",
             marginBottom: "8px",
           }}
@@ -148,7 +148,7 @@ export default function AboutPage() {
         >
           <h2
             style={{
-              fontFamily: "Playfair Display, serif",
+              fontFamily: "var(--font-playfair), serif",
               fontSize: "34px",
               color: "#fff",
               maxWidth: "480px",
@@ -239,7 +239,7 @@ function ValueItem({ icon, title, description }) {
       </svg>
       <h3
         style={{
-          fontFamily: "Playfair Display, serif",
+          fontFamily: "var(--font-playfair), serif",
           fontSize: "16px",
           marginBottom: "10px",
         }}

@@ -184,7 +184,7 @@ function LoginForm() {
             color: "var(--gray-text)",
           }}
         >
-          Don't have an account?{" "}
+          Don&apos;t have an account?{" "}
           <Link href="/register" style={{ color: "var(--gold)" }}>
             Create one
           </Link>

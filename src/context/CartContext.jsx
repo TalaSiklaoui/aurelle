@@ -5,13 +5,25 @@ import { createContext, useContext, useState, useEffect } from "react";
 const CartContext = createContext();
 
 export function CartProvider({ children }) {
-  const [cartItems, setCartItems] = useState([]);
+  const [cartItems, setCartItems] = useState(() => {
+    if (typeof window === "undefined") return [];
+
+    try {
+      const saved = localStorage.getItem("aurelle_cart");
+      return saved ? JSON.parse(saved) : [];
+    } catch {
+      return [];
+    }
+  });
+
   const [loaded, setLoaded] = useState(false);
 
   useEffect(() => {
-    const saved = localStorage.getItem("aurelle_cart");
-    if (saved) setCartItems(JSON.parse(saved));
-    setLoaded(true);
+    const timeout = setTimeout(() => {
+      setLoaded(true);
+    }, 0);
+
+    return () => clearTimeout(timeout);
   }, []);
 
   useEffect(() => {
@@ -23,6 +35,7 @@ export function CartProvider({ children }) {
   const addToCart = (product, quantity = 1) => {
     setCartItems((prev) => {
       const existing = prev.find((item) => item.id === product.id);
+
       if (existing) {
         return prev.map((item) =>
           item.id === product.id
@@ -30,6 +43,7 @@ export function CartProvider({ children }) {
             : item,
         );
       }
+
       return [
         ...prev,
         {
@@ -49,6 +63,7 @@ export function CartProvider({ children }) {
 
   const updateQuantity = (id, quantity) => {
     if (quantity < 1) return removeFromCart(id);
+
     setCartItems((prev) =>
       prev.map((item) => (item.id === id ? { ...item, quantity } : item)),
     );
@@ -60,6 +75,7 @@ export function CartProvider({ children }) {
     (sum, item) => sum + item.price * item.quantity,
     0,
   );
+
   const itemCount = cartItems.reduce((sum, item) => sum + item.quantity, 0);
 
   return (

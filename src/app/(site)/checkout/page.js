@@ -96,7 +96,7 @@ export default function CheckoutPage() {
   if (cartItems.length === 0) {
     return (
       <div style={{ padding: "80px 40px", textAlign: "center" }}>
-        <h1 style={{ fontFamily: "Playfair Display, serif" }}>Checkout</h1>
+        <h1 style={{ fontFamily: "var(--font-playfair), serif" }}>Checkout</h1>
         <p style={{ color: "var(--gray-text)", marginTop: "16px" }}>
           Your cart is empty.
         </p>
@@ -113,7 +113,10 @@ export default function CheckoutPage() {
   return (
     <div style={{ padding: "60px 40px", maxWidth: "1200px", margin: "0 auto" }}>
       <h1
-        style={{ fontFamily: "Playfair Display, serif", marginBottom: "40px" }}
+        style={{
+          fontFamily: "var(--font-playfair), serif",
+          marginBottom: "40px",
+        }}
       >
         Checkout
       </h1>
@@ -257,7 +260,7 @@ export default function CheckoutPage() {
         >
           <h3
             style={{
-              fontFamily: "Playfair Display, serif",
+              fontFamily: "var(--font-playfair), serif",
               marginBottom: "20px",
             }}
           >
@@ -383,7 +386,7 @@ export default function CheckoutPage() {
 }
 
 const sectionTitleStyle = {
-  fontFamily: "Playfair Display, serif",
+  fontFamily: "var(--font-playfair), serif",
   fontSize: "16px",
   marginBottom: "16px",
 };

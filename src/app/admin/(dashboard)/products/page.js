@@ -1,5 +1,6 @@
 import { prisma } from "@/lib/prisma";
 import Link from "next/link";
+import Image from "next/image";
 import DeleteProductButton from "@/components/admin/DeleteProductButton";
 
 export default async function ProductsPage() {
@@ -61,12 +62,12 @@ export default async function ProductsPage() {
                 style={{ borderBottom: "1px solid #f5f5f5" }}
               >
                 <td style={tdStyle}>
-                  <img
+                  <Image
                     src={product.image || "/images/placeholder.jpeg"}
                     alt={product.title}
+                    width={48}
+                    height={48}
                     style={{
-                      width: "48px",
-                      height: "48px",
                       objectFit: "cover",
                       borderRadius: "4px",
                     }}

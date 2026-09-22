@@ -54,7 +54,10 @@ export default function ContactPage() {
   return (
     <div style={{ padding: "60px 40px", maxWidth: "1100px", margin: "0 auto" }}>
       <h1
-        style={{ fontFamily: "Playfair Display, serif", marginBottom: "8px" }}
+        style={{
+          fontFamily: "var(--font-playfair), serif",
+          marginBottom: "8px",
+        }}
       >
         Get in Touch
       </h1>

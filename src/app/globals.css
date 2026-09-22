@@ -13,15 +13,16 @@ body {
   margin: 0;
   background-color: var(--cream);
   color: var(--black);
-  font-family: "Inter", sans-serif;
+  font-family: var(--font-inter), sans-serif;
 }
 
 * {
   box-sizing: border-box;
 }
+
 h1,
 h2,
 h3,
 h4 {
-  font-family: "Playfair Display", serif;
+  font-family: var(--font-playfair), serif;
 }

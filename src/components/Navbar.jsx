@@ -13,15 +13,18 @@ export default function Navbar() {
   const searchRef = useRef(null);
 
   useEffect(() => {
-    if (!query.trim()) {
-      setResults([]);
-      return;
-    }
+    if (!query.trim()) return;
+
     const timeout = setTimeout(async () => {
-      const res = await fetch(`/api/search?q=${encodeURIComponent(query)}`);
-      const data = await res.json();
-      setResults(data);
+      try {
+        const res = await fetch(`/api/search?q=${encodeURIComponent(query)}`);
+        const data = await res.json();
+        setResults(data);
+      } catch (error) {
+        console.error("Search failed:", error);
+      }
     }, 250);
+
     return () => clearTimeout(timeout);
   }, [query]);
 
@@ -87,11 +90,12 @@ export default function Navbar() {
         </svg>
         <h1
           style={{
-            fontFamily: "Playfair Display, serif",
+            fontFamily: "var(--font-playfair), serif",
             fontSize: "24px",
             letterSpacing: "3px",
             margin: 0,
           }}
+          s
         >
           AURELLE
         </h1>

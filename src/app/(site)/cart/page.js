@@ -10,7 +10,7 @@ export default function CartPage() {
   if (cartItems.length === 0) {
     return (
       <div style={{ padding: "80px 40px", textAlign: "center" }}>
-        <h1 style={{ fontFamily: "Playfair Display, serif" }}>Your Cart</h1>
+        <h1 style={{ fontFamily: "var(--font-playfair), serif" }}>Your Cart</h1>
         <p style={{ color: "var(--gray-text)", marginTop: "16px" }}>
           Your cart is empty.
         </p>
@@ -31,7 +31,10 @@ export default function CartPage() {
   return (
     <div style={{ padding: "60px 40px", maxWidth: "1200px", margin: "0 auto" }}>
       <h1
-        style={{ fontFamily: "Playfair Display, serif", marginBottom: "40px" }}
+        style={{
+          fontFamily: "var(--font-playfair), serif",
+          marginBottom: "40px",
+        }}
       >
         Your Cart
       </h1>
@@ -90,7 +93,7 @@ export default function CartPage() {
                     style={{ objectFit: "cover" }}
                   />
                 </div>
-                <span style={{ fontFamily: "Playfair Display, serif" }}>
+                <span style={{ fontFamily: "var(--font-playfair), serif" }}>
                   {item.title}
                 </span>
               </div>
@@ -150,7 +153,7 @@ export default function CartPage() {
         >
           <h3
             style={{
-              fontFamily: "Playfair Display, serif",
+              fontFamily: "var(--font-playfair), serif",
               marginBottom: "20px",
             }}
           >
