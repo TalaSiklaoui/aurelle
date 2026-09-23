@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { signOut } from "next-auth/react";
+import { useState } from "react";
 
 const navItems = [
   { label: "Dashboard", href: "/admin" },
@@ -13,165 +13,195 @@ const navItems = [
 
 export default function AdminSidebar() {
   const pathname = usePathname();
+  const [menuOpen, setMenuOpen] = useState(false);
+
+  const isActive = (href) => {
+    if (href === "/admin") return pathname === "/admin";
+    return pathname.startsWith(href);
+  };
 
   return (
     <>
-      <aside className="admin-sidebar">
-        <div className="admin-main">
-          <div className="admin-logo">
+      {/* DESKTOP SIDEBAR */}
+      <aside className="desktop-sidebar">
+        <div>
+          <div className="desktop-logo">
             <h2>AURELLE</h2>
             <p>ADMIN</p>
           </div>
 
-          <nav className="admin-nav">
-            {navItems.map((item) => {
-              const isActive =
-                item.href === "/admin"
-                  ? pathname === "/admin"
-                  : pathname.startsWith(item.href);
-
-              return (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  className={`admin-link ${isActive ? "active" : ""}`}
-                >
-                  {item.label}
-                </Link>
-              );
-            })}
+          <nav>
+            {navItems.map((item) => (
+              <Link
+                key={item.href}
+                href={item.href}
+                className={`desktop-link ${
+                  isActive(item.href) ? "active" : ""
+                }`}
+              >
+                {item.label}
+              </Link>
+            ))}
           </nav>
         </div>
-
-        <button
-          className="logout-button"
-          onClick={() => signOut({ callbackUrl: "/admin/login" })}
-        >
-          Log out
-        </button>
       </aside>
 
+      {/* MOBILE TOP NAV */}
+      <header className="mobile-admin-header">
+        <button
+          className="menu-button"
+          onClick={() => setMenuOpen(!menuOpen)}
+          aria-label="Open admin menu"
+        >
+          <span />
+          <span />
+          <span />
+        </button>
+
+        <div className="mobile-logo">
+          <h2>AURELLE</h2>
+          <p>ADMIN</p>
+        </div>
+
+        {/* keeps logo perfectly centered */}
+        <div className="menu-spacer" />
+
+        {menuOpen && (
+          <nav className="mobile-menu">
+            {navItems.map((item) => (
+              <Link
+                key={item.href}
+                href={item.href}
+                onClick={() => setMenuOpen(false)}
+                className={isActive(item.href) ? "active" : ""}
+              >
+                {item.label}
+              </Link>
+            ))}
+          </nav>
+        )}
+      </header>
+
       <style jsx>{`
-        .admin-sidebar {
+        .desktop-sidebar {
           width: 240px;
           min-width: 240px;
           height: 100vh;
-          background-color: var(--black);
-          color: #fff;
+          background: var(--black);
           padding: 32px 20px;
-          display: flex;
-          flex-direction: column;
-          justify-content: space-between;
           position: sticky;
           top: 0;
           box-sizing: border-box;
-          z-index: 20;
         }
 
-        .admin-logo {
-          margin-bottom: 48px;
+        .desktop-logo {
           text-align: center;
+          margin-bottom: 48px;
         }
 
-        .admin-logo h2 {
+        .desktop-logo h2,
+        .mobile-logo h2 {
+          margin: 0;
           color: var(--gold);
           font-size: 22px;
           letter-spacing: 2px;
-          margin: 0;
         }
 
-        .admin-logo p {
+        .desktop-logo p,
+        .mobile-logo p {
+          color: #999;
           font-size: 10px;
           letter-spacing: 3px;
-          color: #999;
-          margin-top: 4px;
+          margin: 4px 0 0;
         }
 
-        .admin-nav {
-          display: flex;
-          flex-direction: column;
-        }
-
-        .admin-link {
+        .desktop-link {
           display: block;
           padding: 12px 14px;
           margin-bottom: 4px;
           border-radius: 4px;
           color: #ccc;
-          background-color: transparent;
           text-decoration: none;
           font-size: 14px;
-          transition: 0.2s ease;
         }
 
-        .admin-link.active {
+        .desktop-link.active {
           color: var(--gold);
-          background-color: rgba(201, 162, 75, 0.12);
+          background: rgba(201, 162, 75, 0.12);
         }
 
-        .logout-button {
-          background: none;
-          border: 1px solid #444;
-          color: #ccc;
-          padding: 10px;
-          border-radius: 4px;
-          cursor: pointer;
-          font-size: 13px;
+        .mobile-admin-header {
+          display: none;
         }
 
         @media (max-width: 768px) {
-          .admin-sidebar {
-            width: 100%;
-            min-width: 0;
-            height: auto;
-            position: relative;
-            padding: 18px 20px 14px;
-            flex-direction: column;
-            gap: 16px;
-          }
-
-          .admin-main {
-            width: 100%;
-          }
-
-          .admin-logo {
-            margin-bottom: 16px;
-            text-align: center;
-          }
-
-          .admin-logo h2 {
-            font-size: 20px;
-          }
-
-          .admin-logo p {
-            margin: 3px 0 0;
-          }
-
-          .admin-nav {
-            width: 100%;
-            flex-direction: row;
-            overflow-x: auto;
-            gap: 6px;
-            padding-bottom: 2px;
-            scrollbar-width: none;
-          }
-
-          .admin-nav::-webkit-scrollbar {
+          .desktop-sidebar {
             display: none;
           }
 
-          .admin-link {
-            flex: 0 0 auto;
-            margin: 0;
-            padding: 9px 12px;
-            font-size: 12px;
-            white-space: nowrap;
+          .mobile-admin-header {
+            width: 100%;
+            height: 82px;
+            background: var(--black);
+            display: grid;
+            grid-template-columns: 50px 1fr 50px;
+            align-items: center;
+            padding: 0 20px;
+            box-sizing: border-box;
+            position: relative;
+            z-index: 100;
           }
 
-          .logout-button {
+          .mobile-logo {
+            text-align: center;
+          }
+
+          .mobile-logo h2 {
+            font-size: 20px;
+          }
+
+          .menu-button {
+            width: 38px;
+            height: 38px;
+            border: none;
+            background: transparent;
+            padding: 7px;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            gap: 5px;
+          }
+
+          .menu-button span {
+            display: block;
+            width: 23px;
+            height: 1px;
+            background: #fff;
+          }
+
+          .mobile-menu {
+            position: absolute;
+            top: 82px;
+            left: 0;
             width: 100%;
-            padding: 9px;
-            font-size: 12px;
+            background: var(--black);
+            padding: 12px 20px 22px;
+            box-sizing: border-box;
+            border-top: 1px solid #333;
+          }
+
+          .mobile-menu a {
+            display: block;
+            color: #ccc;
+            text-decoration: none;
+            padding: 14px 6px;
+            font-size: 14px;
+            border-bottom: 1px solid #292929;
+          }
+
+          .mobile-menu a.active {
+            color: var(--gold);
           }
         }
       `}</style>
