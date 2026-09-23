@@ -15,6 +15,7 @@ export default function ShopClient() {
   const [activeCategory, setActiveCategory] = useState(initialCategory);
   const [maxPrice, setMaxPrice] = useState(200);
   const [sortBy, setSortBy] = useState("featured");
+  const [filtersOpen, setFiltersOpen] = useState(false);
 
   useEffect(() => {
     fetch("/api/products")
@@ -30,13 +31,15 @@ export default function ShopClient() {
       const matchesCategory =
         activeCategory === "All" || p.category === activeCategory;
       const matchesPrice = p.price <= maxPrice;
+
       return matchesCategory && matchesPrice;
     });
 
-    if (sortBy === "price-low")
+    if (sortBy === "price-low") {
       result = [...result].sort((a, b) => a.price - b.price);
-    else if (sortBy === "price-high")
+    } else if (sortBy === "price-high") {
       result = [...result].sort((a, b) => b.price - a.price);
+    }
 
     return result;
   }, [products, activeCategory, maxPrice, sortBy]);
@@ -58,87 +61,92 @@ export default function ShopClient() {
     return <p style={{ textAlign: "center", padding: "80px" }}>Loading...</p>;
   }
 
-  return (
-    <section style={{ padding: "60px", textAlign: "center" }}>
-      <h1 style={{ fontSize: "36px", marginBottom: "16px" }}>Shop All</h1>
-      <div
+  const filters = (
+    <>
+      <p
         style={{
-          width: "40px",
-          height: "2px",
-          backgroundColor: "var(--gold)",
-          margin: "0 auto 48px",
-        }}
-      />
-
-      <div
-        style={{
-          display: "flex",
-          gap: "48px",
-          textAlign: "left",
-          maxWidth: "1200px",
-          margin: "0 auto",
+          fontSize: "12px",
+          letterSpacing: "1px",
+          textTransform: "uppercase",
+          marginBottom: "12px",
+          fontWeight: "600",
         }}
       >
-        <aside style={{ width: "180px", flexShrink: 0 }}>
-          <p
-            style={{
-              fontSize: "12px",
-              letterSpacing: "1px",
-              textTransform: "uppercase",
-              marginBottom: "12px",
-              fontWeight: "600",
-            }}
-          >
-            Category
-          </p>
-          {categories.map((cat) => (
-            <button
-              key={cat}
-              style={categoryButtonStyle(cat)}
-              onClick={() => setActiveCategory(cat)}
-            >
-              {cat}
-            </button>
-          ))}
+        Category
+      </p>
 
-          <p
-            style={{
-              fontSize: "12px",
-              letterSpacing: "1px",
-              textTransform: "uppercase",
-              margin: "28px 0 12px",
-              fontWeight: "600",
-            }}
-          >
-            Max Price: ${maxPrice}
-          </p>
-          <input
-            type="range"
-            min="40"
-            max="200"
-            value={maxPrice}
-            onChange={(e) => setMaxPrice(Number(e.target.value))}
-            style={{ width: "100%" }}
-          />
-        </aside>
+      {categories.map((cat) => (
+        <button
+          key={cat}
+          style={categoryButtonStyle(cat)}
+          onClick={() => {
+            setActiveCategory(cat);
+            setFiltersOpen(false);
+          }}
+        >
+          {cat}
+        </button>
+      ))}
 
-        <div style={{ flex: 1 }}>
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "flex-end",
-              marginBottom: "24px",
-            }}
-          >
+      <p
+        style={{
+          fontSize: "12px",
+          letterSpacing: "1px",
+          textTransform: "uppercase",
+          margin: "28px 0 12px",
+          fontWeight: "600",
+        }}
+      >
+        Max Price: ${maxPrice}
+      </p>
+
+      <input
+        type="range"
+        min="40"
+        max="200"
+        value={maxPrice}
+        onChange={(e) => setMaxPrice(Number(e.target.value))}
+        style={{ width: "100%" }}
+      />
+    </>
+  );
+
+  return (
+    <section className="shop-page">
+      <h1 className="shop-title">Shop All</h1>
+
+      <div className="shop-title-line" />
+
+      <div className="shop-mobile-controls">
+        <button
+          className="shop-filter-button"
+          onClick={() => setFiltersOpen((open) => !open)}
+        >
+          Filter {filtersOpen ? "−" : "+"}
+        </button>
+
+        <select
+          value={sortBy}
+          onChange={(e) => setSortBy(e.target.value)}
+          className="shop-sort"
+        >
+          <option value="featured">Sort: Featured</option>
+          <option value="price-low">Price: Low to High</option>
+          <option value="price-high">Price: High to Low</option>
+        </select>
+      </div>
+
+      {filtersOpen && <div className="shop-mobile-filters">{filters}</div>}
+
+      <div className="shop-layout">
+        <aside className="shop-sidebar">{filters}</aside>
+
+        <div className="shop-products-area">
+          <div className="shop-desktop-sort">
             <select
               value={sortBy}
               onChange={(e) => setSortBy(e.target.value)}
-              style={{
-                padding: "8px 12px",
-                fontSize: "13px",
-                border: "1px solid #E5DFD3",
-                backgroundColor: "white",
-              }}
+              className="shop-sort"
             >
               <option value="featured">Sort: Featured</option>
               <option value="price-low">Price: Low to High</option>
@@ -147,18 +155,16 @@ export default function ShopClient() {
           </div>
 
           {filteredProducts.length === 0 ? (
-            <p style={{ textAlign: "center", color: "var(--gray-text)" }}>
+            <p
+              style={{
+                textAlign: "center",
+                color: "var(--gray-text)",
+              }}
+            >
               No products match your filters.
             </p>
           ) : (
-            <div
-              style={{
-                display: "flex",
-                flexWrap: "wrap",
-                gap: "24px",
-                justifyContent: "center",
-              }}
-            >
+            <div className="shop-product-grid">
               {filteredProducts.map((product) => (
                 <ProductCard key={product.id} product={product} isNew={false} />
               ))}

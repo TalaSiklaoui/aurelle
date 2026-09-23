@@ -289,3 +289,150 @@ h4 {
     border-bottom: none;
   }
 }
+/* SHOP PAGE */
+
+.shop-page {
+  padding: 60px;
+  text-align: center;
+}
+
+.shop-title {
+  font-size: 36px;
+  margin-bottom: 16px;
+}
+
+.shop-title-line {
+  width: 40px;
+  height: 2px;
+  background-color: var(--gold);
+  margin: 0 auto 48px;
+}
+
+.shop-layout {
+  display: flex;
+  gap: 48px;
+  text-align: left;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.shop-sidebar {
+  width: 180px;
+  flex-shrink: 0;
+}
+
+.shop-products-area {
+  flex: 1;
+  min-width: 0;
+}
+
+.shop-desktop-sort {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 24px;
+}
+
+.shop-sort {
+  padding: 8px 12px;
+  font-size: 13px;
+  border: 1px solid #e5dfd3;
+  background-color: white;
+}
+
+.shop-product-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 24px;
+  justify-content: center;
+}
+
+.shop-mobile-controls,
+.shop-mobile-filters {
+  display: none;
+}
+
+/* MOBILE SHOP */
+
+@media (max-width: 768px) {
+  .shop-page {
+    padding: 48px 18px 60px;
+  }
+
+  .shop-title {
+    font-size: 34px;
+  }
+
+  .shop-title-line {
+    margin-bottom: 32px;
+  }
+
+  .shop-sidebar,
+  .shop-desktop-sort {
+    display: none;
+  }
+
+  .shop-layout {
+    display: block;
+    max-width: 100%;
+  }
+
+  .shop-mobile-controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 24px;
+  }
+
+  .shop-filter-button {
+    flex: 1;
+    padding: 10px 12px;
+    background: white;
+    border: 1px solid #e5dfd3;
+    font-size: 13px;
+    cursor: pointer;
+    color: var(--black);
+  }
+
+  .shop-mobile-controls .shop-sort {
+    flex: 1;
+    min-width: 0;
+    padding: 10px 8px;
+  }
+
+  .shop-mobile-filters {
+    display: block;
+    text-align: left;
+    background: white;
+    border: 1px solid #e5dfd3;
+    padding: 20px;
+    margin-bottom: 24px;
+  }
+
+  .shop-product-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 28px 14px;
+    width: 100%;
+  }
+
+  .shop-product-grid > a {
+    width: 100% !important;
+    min-width: 0;
+  }
+
+  .shop-product-grid > a > div:first-child {
+    width: 100% !important;
+    height: auto !important;
+    aspect-ratio: 1 / 1;
+  }
+
+  .shop-product-grid h3 {
+    font-size: 11px !important;
+    line-height: 1.4;
+  }
+
+  .shop-product-grid p {
+    font-size: 11px !important;
+  }
+}
