@@ -1,3 +1,5 @@
+import "./Features.css";
+
 const icons = {
   diamond: (
     <svg
@@ -12,6 +14,7 @@ const icons = {
       <path d="M2 9h20M9 3l-3 6 6 12 6-12-3-6" />
     </svg>
   ),
+
   heart: (
     <svg
       width="28"
@@ -40,6 +43,7 @@ const icons = {
       <path d="M9 12l2 2 4-4" />
     </svg>
   ),
+
   box: (
     <svg
       width="28"
@@ -79,53 +83,18 @@ const features = [
   },
 ];
 
-function Features() {
+export default function Features() {
   return (
-    <section
-      style={{
-        backgroundColor: "var(--black)",
-        display: "flex",
-        justifyContent: "space-around",
-        padding: "48px 40px",
-        flexWrap: "wrap",
-        gap: "32px",
-      }}
-    >
-      {features.map((feature, index) => (
-        <div key={index} style={{ textAlign: "center", maxWidth: "200px" }}>
-          <div
-            style={{
-              marginBottom: "12px",
-              display: "flex",
-              justifyContent: "center",
-            }}
-          >
-            {icons[feature.icon]}
-          </div>
-          <h3
-            style={{
-              color: "var(--gold)",
-              fontSize: "13px",
-              letterSpacing: "1px",
-              textTransform: "uppercase",
-              marginBottom: "8px",
-            }}
-          >
-            {feature.title}
-          </h3>
-          <p
-            style={{
-              color: "#B8B8B5",
-              fontSize: "13px",
-              lineHeight: "1.6",
-            }}
-          >
-            {feature.text}
-          </p>
+    <section className="features-section">
+      {features.map((feature) => (
+        <div key={feature.title} className="feature-item">
+          <div className="feature-icon">{icons[feature.icon]}</div>
+
+          <h3>{feature.title}</h3>
+
+          <p>{feature.text}</p>
         </div>
       ))}
     </section>
   );
 }
-
-export default Features;

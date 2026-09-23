@@ -1,5 +1,6 @@
 import { prisma } from "@/lib/prisma";
 import ProductCard from "./ProductCard";
+import "./ProductGrid.css";
 
 const bestSellerTitles = [
   "Oval Halo Pendant",
@@ -14,25 +15,12 @@ export default async function ProductGrid() {
   });
 
   return (
-    <section style={{ padding: "80px 60px", textAlign: "center" }}>
-      <h2 style={{ fontSize: "32px", marginBottom: "16px" }}>Best Sellers</h2>
-      <div
-        style={{
-          width: "40px",
-          height: "2px",
-          backgroundColor: "var(--gold)",
-          margin: "0 auto 48px",
-        }}
-      />
+    <section className="product-grid-section">
+      <h2>Best Sellers</h2>
 
-      <div
-        style={{
-          display: "flex",
-          flexWrap: "wrap",
-          gap: "24px",
-          justifyContent: "center",
-        }}
-      >
+      <div className="product-grid-line" />
+
+      <div className="product-grid">
         {bestSellers.map((product, index) => (
           <ProductCard key={product.id} product={product} isNew={index < 3} />
         ))}

@@ -1,5 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
+import "./Collections.css";
 
 const collections = [
   { name: "Rings", image: "/images/Aure_r02.jpeg" },
@@ -10,68 +11,32 @@ const collections = [
 
 export default function Collections() {
   return (
-    <section
-      id="collections"
-      style={{ padding: "80px 60px", textAlign: "center" }}
-    >
-      <h2 style={{ fontSize: "32px", marginBottom: "16px" }}>
-        Shop by Collection
-      </h2>
-      <div
-        style={{
-          width: "40px",
-          height: "2px",
-          backgroundColor: "var(--gold)",
-          margin: "0 auto 48px",
-        }}
-      />
+    <section id="collections" className="collections-section">
+      <h2>Shop by Collection</h2>
 
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "center",
-          gap: "24px",
-          flexWrap: "wrap",
-        }}
-      >
+      <div className="collections-line" />
+
+      <div className="collections-grid">
         {collections.map((item) => (
-          <div key={item.name} style={{ width: "220px" }}>
-            <div
-              style={{
-                position: "relative",
-                width: "100%",
-                height: "220px",
-                backgroundColor: "#F0EAE0",
-                borderRadius: "4px",
-                overflow: "hidden",
-                marginBottom: "16px",
-              }}
+          <div key={item.name} className="collection-card">
+            <Link
+              href={`/shop?category=${item.name}`}
+              className="collection-image"
             >
               <Image
                 src={item.image}
                 alt={item.name}
                 fill
+                sizes="(max-width: 768px) 45vw, 220px"
                 style={{ objectFit: "cover" }}
               />
-            </div>
-            <h3
-              style={{
-                fontSize: "13px",
-                letterSpacing: "1px",
-                textTransform: "uppercase",
-                marginBottom: "4px",
-              }}
-            >
-              {item.name}
-            </h3>
+            </Link>
+
+            <h3>{item.name}</h3>
+
             <Link
               href={`/shop?category=${item.name}`}
-              style={{
-                fontSize: "12px",
-                color: "var(--black)",
-                textDecoration: "none",
-                letterSpacing: "0.5px",
-              }}
+              className="collection-link"
             >
               Discover →
             </Link>
