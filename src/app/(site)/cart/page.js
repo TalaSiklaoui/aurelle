@@ -29,7 +29,14 @@ export default function CartPage() {
   const shippingCost = cartTotal >= SHIPPING_THRESHOLD ? 0 : SHIPPING_FEE;
 
   return (
-    <div style={{ padding: "60px 40px", maxWidth: "1200px", margin: "0 auto" }}>
+    <div
+      className="cart-page"
+      style={{
+        padding: "60px 40px",
+        maxWidth: "1200px",
+        margin: "0 auto",
+      }}
+    >
       <h1
         style={{
           fontFamily: "var(--font-playfair), serif",
@@ -47,8 +54,11 @@ export default function CartPage() {
           flexWrap: "wrap",
         }}
       >
+        {/* CART PRODUCTS */}
         <div style={{ flex: "2 1 500px" }}>
+          {/* DESKTOP HEADER */}
           <div
+            className="cart-header"
             style={{
               display: "grid",
               gridTemplateColumns: "2fr 1fr 1fr 1fr auto",
@@ -65,9 +75,11 @@ export default function CartPage() {
             <span></span>
           </div>
 
+          {/* CART ITEMS */}
           {cartItems.map((item) => (
             <div
               key={item.id}
+              className="cart-item"
               style={{
                 display: "grid",
                 gridTemplateColumns: "2fr 1fr 1fr 1fr auto",
@@ -76,14 +88,21 @@ export default function CartPage() {
                 borderBottom: "1px solid #E5E0D8",
               }}
             >
+              {/* PRODUCT */}
               <div
-                style={{ display: "flex", alignItems: "center", gap: "16px" }}
+                className="cart-product"
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "16px",
+                }}
               >
                 <div
                   style={{
                     position: "relative",
                     width: "64px",
                     height: "64px",
+                    flexShrink: 0,
                   }}
                 >
                   <Image
@@ -93,31 +112,57 @@ export default function CartPage() {
                     style={{ objectFit: "cover" }}
                   />
                 </div>
-                <span style={{ fontFamily: "var(--font-playfair), serif" }}>
+
+                <span
+                  style={{
+                    fontFamily: "var(--font-playfair), serif",
+                  }}
+                >
                   {item.title}
                 </span>
               </div>
-              <span>${item.price}</span>
+
+              {/* PRICE */}
+              <span className="cart-price">${item.price}</span>
+
+              {/* QUANTITY */}
               <div
-                style={{ display: "flex", alignItems: "center", gap: "8px" }}
+                className="cart-quantity"
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "8px",
+                }}
               >
                 <button
                   onClick={() => updateQuantity(item.id, item.quantity - 1)}
                   style={qtyBtn}
+                  aria-label={`Decrease ${item.title} quantity`}
                 >
                   −
                 </button>
+
                 <span>{item.quantity}</span>
+
                 <button
                   onClick={() => updateQuantity(item.id, item.quantity + 1)}
                   style={qtyBtn}
+                  aria-label={`Increase ${item.title} quantity`}
                 >
                   +
                 </button>
               </div>
-              <span>${item.price * item.quantity}</span>
+
+              {/* TOTAL */}
+              <span className="cart-item-total">
+                ${item.price * item.quantity}
+              </span>
+
+              {/* REMOVE */}
               <button
+                className="cart-remove"
                 onClick={() => removeFromCart(item.id)}
+                aria-label={`Remove ${item.title} from cart`}
                 style={{
                   background: "none",
                   border: "none",
@@ -143,7 +188,9 @@ export default function CartPage() {
           </Link>
         </div>
 
+        {/* CART TOTALS */}
         <div
+          className="cart-summary"
           style={{
             flex: "1 1 280px",
             background: "var(--cream)",
@@ -159,6 +206,7 @@ export default function CartPage() {
           >
             Cart Totals
           </h3>
+
           <div
             style={{
               display: "flex",
@@ -169,6 +217,7 @@ export default function CartPage() {
             <span>Subtotal</span>
             <span>${cartTotal}</span>
           </div>
+
           <div
             style={{
               display: "flex",
@@ -179,6 +228,7 @@ export default function CartPage() {
             <span>Delivery</span>
             <span>{shippingCost === 0 ? "Free" : `$${shippingCost}`}</span>
           </div>
+
           <div
             style={{
               display: "flex",
@@ -192,6 +242,7 @@ export default function CartPage() {
             <span>Total</span>
             <span>${cartTotal + shippingCost}</span>
           </div>
+
           <Link href="/checkout">
             <button
               style={{
@@ -206,6 +257,7 @@ export default function CartPage() {
               CHECKOUT
             </button>
           </Link>
+
           <p
             style={{
               fontSize: "12px",

@@ -26,6 +26,7 @@ export default function CheckoutPage() {
   useEffect(() => {
     async function autofill() {
       const session = await getSession();
+
       if (session?.user?.role !== "customer") return;
 
       const res = await fetch("/api/customers/last-order");
@@ -43,19 +44,26 @@ export default function CheckoutPage() {
         phone: data.order?.phone || f.phone,
       }));
     }
+
     autofill();
   }, []);
 
   const SHIPPING_THRESHOLD = 250;
   const SHIPPING_FEE = 6;
+
   const shippingCost = cartTotal >= SHIPPING_THRESHOLD ? 0 : SHIPPING_FEE;
+
   const orderTotal = cartTotal + shippingCost;
 
   const handleChange = (e) =>
-    setForm({ ...form, [e.target.name]: e.target.value });
+    setForm({
+      ...form,
+      [e.target.name]: e.target.value,
+    });
 
   const handlePlaceOrder = async (e) => {
     e.preventDefault();
+
     if (
       !form.email ||
       !form.fullName ||
@@ -70,10 +78,13 @@ export default function CheckoutPage() {
     }
 
     setSubmitting(true);
+
     try {
       const res = await fetch("/api/orders", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+        },
         body: JSON.stringify({
           ...form,
           cartItems,
@@ -95,14 +106,36 @@ export default function CheckoutPage() {
 
   if (cartItems.length === 0) {
     return (
-      <div style={{ padding: "80px 40px", textAlign: "center" }}>
-        <h1 style={{ fontFamily: "var(--font-playfair), serif" }}>Checkout</h1>
-        <p style={{ color: "var(--gray-text)", marginTop: "16px" }}>
+      <div
+        className="checkout-empty"
+        style={{
+          padding: "80px 40px",
+          textAlign: "center",
+        }}
+      >
+        <h1
+          style={{
+            fontFamily: "var(--font-playfair), serif",
+          }}
+        >
+          Checkout
+        </h1>
+
+        <p
+          style={{
+            color: "var(--gray-text)",
+            marginTop: "16px",
+          }}
+        >
           Your cart is empty.
         </p>
+
         <Link
           href="/shop"
-          style={{ color: "var(--gold)", textDecoration: "underline" }}
+          style={{
+            color: "var(--gold)",
+            textDecoration: "underline",
+          }}
         >
           Continue Shopping
         </Link>
@@ -111,8 +144,16 @@ export default function CheckoutPage() {
   }
 
   return (
-    <div style={{ padding: "60px 40px", maxWidth: "1200px", margin: "0 auto" }}>
+    <div
+      className="checkout-page"
+      style={{
+        padding: "60px 40px",
+        maxWidth: "1200px",
+        margin: "0 auto",
+      }}
+    >
       <h1
+        className="checkout-title"
         style={{
           fontFamily: "var(--font-playfair), serif",
           marginBottom: "40px",
@@ -122,6 +163,7 @@ export default function CheckoutPage() {
       </h1>
 
       <div
+        className="checkout-layout"
         style={{
           display: "flex",
           gap: "40px",
@@ -129,8 +171,15 @@ export default function CheckoutPage() {
           flexWrap: "wrap",
         }}
       >
-        <form onSubmit={handlePlaceOrder} style={{ flex: "2 1 500px" }}>
+        <form
+          onSubmit={handlePlaceOrder}
+          className="checkout-form"
+          style={{
+            flex: "2 1 500px",
+          }}
+        >
           <h3 style={sectionTitleStyle}>1. Contact Information</h3>
+
           <input
             type="email"
             name="email"
@@ -140,6 +189,7 @@ export default function CheckoutPage() {
             style={inputStyle}
             required
           />
+
           <label
             style={{
               display: "flex",
@@ -155,6 +205,7 @@ export default function CheckoutPage() {
           </label>
 
           <h3 style={sectionTitleStyle}>2. Delivery Address</h3>
+
           <input
             type="text"
             name="fullName"
@@ -164,6 +215,7 @@ export default function CheckoutPage() {
             style={inputStyle}
             required
           />
+
           <input
             type="text"
             name="address"
@@ -173,6 +225,7 @@ export default function CheckoutPage() {
             style={inputStyle}
             required
           />
+
           <input
             type="text"
             name="apartment"
@@ -181,48 +234,77 @@ export default function CheckoutPage() {
             onChange={handleChange}
             style={inputStyle}
           />
-          <div style={{ display: "flex", gap: "16px" }}>
+
+          <div
+            className="checkout-field-row"
+            style={{
+              display: "flex",
+              gap: "16px",
+            }}
+          >
             <input
               type="text"
               name="city"
               placeholder="City"
               value={form.city}
               onChange={handleChange}
-              style={{ ...inputStyle, flex: 1 }}
+              style={{
+                ...inputStyle,
+                flex: 1,
+              }}
               required
             />
+
             <input
               type="text"
               name="postalCode"
               placeholder="Postal code"
               value={form.postalCode}
               onChange={handleChange}
-              style={{ ...inputStyle, flex: 1 }}
+              style={{
+                ...inputStyle,
+                flex: 1,
+              }}
               required
             />
           </div>
-          <div style={{ display: "flex", gap: "16px" }}>
+
+          <div
+            className="checkout-field-row"
+            style={{
+              display: "flex",
+              gap: "16px",
+            }}
+          >
             <input
               type="text"
               name="country"
               placeholder="Country"
               value={form.country}
               onChange={handleChange}
-              style={{ ...inputStyle, flex: 1 }}
+              style={{
+                ...inputStyle,
+                flex: 1,
+              }}
               required
             />
+
             <input
               type="tel"
               name="phone"
               placeholder="Phone"
               value={form.phone}
               onChange={handleChange}
-              style={{ ...inputStyle, flex: 1 }}
+              style={{
+                ...inputStyle,
+                flex: 1,
+              }}
               required
             />
           </div>
 
           <div
+            className="checkout-actions"
             style={{
               display: "flex",
               justifyContent: "space-between",
@@ -240,10 +322,14 @@ export default function CheckoutPage() {
             >
               ‹ Return to Cart
             </Link>
+
             <button
               type="submit"
               disabled={submitting}
-              style={{ ...placeOrderBtnStyle, opacity: submitting ? 0.6 : 1 }}
+              style={{
+                ...placeOrderBtnStyle,
+                opacity: submitting ? 0.6 : 1,
+              }}
             >
               {submitting ? "Placing Order..." : "Place Order"}
             </button>
@@ -251,6 +337,7 @@ export default function CheckoutPage() {
         </form>
 
         <div
+          className="checkout-summary"
           style={{
             flex: "1 1 280px",
             background: "var(--cream)",
@@ -278,17 +365,33 @@ export default function CheckoutPage() {
               }}
             >
               <div
-                style={{ position: "relative", width: "48px", height: "48px" }}
+                style={{
+                  position: "relative",
+                  width: "48px",
+                  height: "48px",
+                  flexShrink: 0,
+                }}
               >
                 <Image
                   src={item.image}
                   alt={item.title}
                   fill
-                  style={{ objectFit: "cover" }}
+                  style={{
+                    objectFit: "cover",
+                  }}
                 />
               </div>
+
               <div style={{ flex: 1 }}>
-                <p style={{ fontSize: "13px", margin: 0 }}>{item.title}</p>
+                <p
+                  style={{
+                    fontSize: "13px",
+                    margin: 0,
+                  }}
+                >
+                  {item.title}
+                </p>
+
                 <p
                   style={{
                     fontSize: "12px",
@@ -299,6 +402,7 @@ export default function CheckoutPage() {
                   Qty {item.quantity}
                 </p>
               </div>
+
               <span style={{ fontSize: "13px" }}>
                 ${item.price * item.quantity}
               </span>
@@ -322,6 +426,7 @@ export default function CheckoutPage() {
               <span>Subtotal</span>
               <span>${cartTotal}</span>
             </div>
+
             <div
               style={{
                 display: "flex",
@@ -330,8 +435,10 @@ export default function CheckoutPage() {
               }}
             >
               <span>Delivery</span>
+
               <span>{shippingCost === 0 ? "Free" : `$${shippingCost}`}</span>
             </div>
+
             <div
               style={{
                 display: "flex",
@@ -362,11 +469,15 @@ export default function CheckoutPage() {
               fill="none"
               stroke="var(--gold)"
               strokeWidth="1.5"
-              style={{ flexShrink: 0, marginTop: "2px" }}
+              style={{
+                flexShrink: 0,
+                marginTop: "2px",
+              }}
             >
               <rect x="5" y="11" width="14" height="10" rx="1" />
               <path d="M8 11V7a4 4 0 018 0v4" />
             </svg>
+
             <p
               style={{
                 fontSize: "12px",
@@ -390,6 +501,7 @@ const sectionTitleStyle = {
   fontSize: "16px",
   marginBottom: "16px",
 };
+
 const inputStyle = {
   width: "100%",
   padding: "12px 14px",
@@ -400,6 +512,7 @@ const inputStyle = {
   fontFamily: "Inter, sans-serif",
   boxSizing: "border-box",
 };
+
 const placeOrderBtnStyle = {
   backgroundColor: "var(--black)",
   color: "white",

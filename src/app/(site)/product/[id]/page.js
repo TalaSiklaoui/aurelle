@@ -7,6 +7,7 @@ import Accordion from "@/components/Accordion";
 
 export default async function ProductDetailPage({ params }) {
   const { id } = await params;
+
   const product = await prisma.product.findUnique({
     where: { id: Number(id) },
   });
@@ -15,25 +16,21 @@ export default async function ProductDetailPage({ params }) {
 
   return (
     <div>
-      <section
-        style={{
-          display: "flex",
-          gap: "60px",
-          padding: "80px 60px 40px",
-          flexWrap: "wrap",
-          justifyContent: "center",
-        }}
-      >
-        <div style={{ position: "relative", width: "400px", height: "400px" }}>
+      <section className="product-detail">
+        <div className="product-detail-image">
           <Image
             src={product.image}
             alt={product.title}
             fill
-            style={{ objectFit: "cover", backgroundColor: "#F0EAE0" }}
+            sizes="(max-width: 768px) 100vw, 400px"
+            style={{
+              objectFit: "cover",
+              backgroundColor: "#F0EAE0",
+            }}
           />
         </div>
 
-        <div style={{ maxWidth: "400px" }}>
+        <div className="product-detail-info">
           <Link
             href="/shop"
             style={{
@@ -48,6 +45,7 @@ export default async function ProductDetailPage({ params }) {
           <h1 style={{ fontSize: "28px", margin: "16px 0 8px" }}>
             {product.title}
           </h1>
+
           <p
             style={{
               fontSize: "18px",
@@ -57,6 +55,7 @@ export default async function ProductDetailPage({ params }) {
           >
             ${product.price}
           </p>
+
           <p
             style={{
               fontSize: "14px",
@@ -72,17 +71,17 @@ export default async function ProductDetailPage({ params }) {
         </div>
       </section>
 
-      <section
-        style={{ padding: "0 60px 80px", maxWidth: "980px", margin: "0 auto" }}
-      >
+      <section className="product-accordions">
         <Accordion title="Details">
           Crafted with care using premium materials, designed to be worn every
           day and cherished for years to come.
         </Accordion>
+
         <Accordion title="Delivery">
           Free delivery on all orders over $250. Standard delivery takes 3–5
           business days.
         </Accordion>
+
         <Accordion title="Returns & Exchanges">
           We offer 14-day easy returns. Items must be unworn and in original
           packaging.
