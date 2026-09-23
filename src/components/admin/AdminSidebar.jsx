@@ -23,9 +23,9 @@ export default function AdminSidebar() {
   return (
     <>
       {/* DESKTOP SIDEBAR */}
-      <aside className="desktop-sidebar">
+      <aside className="admin-desktop-sidebar">
         <div>
-          <div className="desktop-logo">
+          <div className="admin-desktop-logo">
             <h2>AURELLE</h2>
             <p>ADMIN</p>
           </div>
@@ -35,8 +35,8 @@ export default function AdminSidebar() {
               <Link
                 key={item.href}
                 href={item.href}
-                className={`desktop-link ${
-                  isActive(item.href) ? "active" : ""
+                className={`admin-desktop-link ${
+                  isActive(item.href) ? "admin-active" : ""
                 }`}
               >
                 {item.label}
@@ -46,34 +46,44 @@ export default function AdminSidebar() {
         </div>
       </aside>
 
-      {/* MOBILE TOP NAV */}
-      <header className="mobile-admin-header">
-        <button
-          className="menu-button"
-          onClick={() => setMenuOpen(!menuOpen)}
-          aria-label="Open admin menu"
-        >
-          <span />
-          <span />
-          <span />
-        </button>
+      {/* MOBILE HEADER */}
+      <header className="admin-mobile-header">
+        <div className="admin-header-row">
+          <button
+            type="button"
+            className={`admin-menu-button ${menuOpen ? "open" : ""}`}
+            onClick={() => setMenuOpen((prev) => !prev)}
+            aria-label={menuOpen ? "Close admin menu" : "Open admin menu"}
+          >
+            {menuOpen ? (
+              <span className="admin-close">×</span>
+            ) : (
+              <>
+                <span className="admin-line" />
+                <span className="admin-line" />
+                <span className="admin-line" />
+              </>
+            )}
+          </button>
 
-        <div className="mobile-logo">
-          <h2>AURELLE</h2>
-          <p>ADMIN</p>
+          <div className="admin-mobile-logo">
+            <h2>AURELLE</h2>
+            <p>ADMIN</p>
+          </div>
+
+          <div className="admin-menu-spacer" />
         </div>
 
-        {/* keeps logo perfectly centered */}
-        <div className="menu-spacer" />
-
         {menuOpen && (
-          <nav className="mobile-menu">
+          <nav className="admin-mobile-menu">
             {navItems.map((item) => (
               <Link
                 key={item.href}
                 href={item.href}
                 onClick={() => setMenuOpen(false)}
-                className={isActive(item.href) ? "active" : ""}
+                className={`admin-mobile-link ${
+                  isActive(item.href) ? "admin-mobile-active" : ""
+                }`}
               >
                 {item.label}
               </Link>
@@ -82,8 +92,12 @@ export default function AdminSidebar() {
         )}
       </header>
 
-      <style jsx>{`
-        .desktop-sidebar {
+      <style jsx global>{`
+        /* =========================
+           DESKTOP ADMIN SIDEBAR
+        ========================== */
+
+        .admin-desktop-sidebar {
           width: 240px;
           min-width: 240px;
           height: 100vh;
@@ -94,114 +108,167 @@ export default function AdminSidebar() {
           box-sizing: border-box;
         }
 
-        .desktop-logo {
+        .admin-desktop-logo {
           text-align: center;
           margin-bottom: 48px;
         }
 
-        .desktop-logo h2,
-        .mobile-logo h2 {
+        .admin-desktop-logo h2 {
           margin: 0;
           color: var(--gold);
           font-size: 22px;
-          letter-spacing: 2px;
+          letter-spacing: 3px;
         }
 
-        .desktop-logo p,
-        .mobile-logo p {
+        .admin-desktop-logo p {
           color: #999;
           font-size: 10px;
-          letter-spacing: 3px;
-          margin: 4px 0 0;
+          letter-spacing: 4px;
+          margin: 5px 0 0;
         }
 
-        .desktop-link {
+        .admin-desktop-link {
           display: block;
           padding: 12px 14px;
           margin-bottom: 4px;
           border-radius: 4px;
-          color: #ccc;
-          text-decoration: none;
+          color: #ccc !important;
+          text-decoration: none !important;
           font-size: 14px;
         }
 
-        .desktop-link.active {
-          color: var(--gold);
+        .admin-desktop-link.admin-active {
+          color: var(--gold) !important;
           background: rgba(201, 162, 75, 0.12);
         }
 
-        .mobile-admin-header {
+        /* Hide mobile nav on desktop */
+
+        .admin-mobile-header {
           display: none;
         }
 
+        /* =========================
+           MOBILE ADMIN NAVBAR
+        ========================== */
+
         @media (max-width: 768px) {
-          .desktop-sidebar {
+          .admin-desktop-sidebar {
             display: none;
           }
 
-          .mobile-admin-header {
+          .admin-mobile-header {
+            display: block;
             width: 100%;
-            height: 82px;
             background: var(--black);
-            display: grid;
-            grid-template-columns: 50px 1fr 50px;
-            align-items: center;
-            padding: 0 20px;
-            box-sizing: border-box;
             position: relative;
-            z-index: 100;
+            z-index: 1000;
           }
 
-          .mobile-logo {
-            text-align: center;
+          .admin-header-row {
+            height: 116px;
+            width: 100%;
+            display: grid;
+            grid-template-columns: 60px 1fr 60px;
+            align-items: center;
+            padding: 0 28px;
+            box-sizing: border-box;
           }
 
-          .mobile-logo h2 {
-            font-size: 20px;
-          }
+          /* Hamburger */
 
-          .menu-button {
-            width: 38px;
-            height: 38px;
+          .admin-menu-button {
+            width: 42px;
+            height: 42px;
+            padding: 0;
+            margin: 0;
             border: none;
             background: transparent;
-            padding: 7px;
             cursor: pointer;
             display: flex;
             flex-direction: column;
             justify-content: center;
-            gap: 5px;
+            align-items: flex-start;
+            gap: 6px;
           }
 
-          .menu-button span {
-            display: block;
-            width: 23px;
-            height: 1px;
+          .admin-line {
+            width: 31px;
+            height: 1.5px;
             background: #fff;
-          }
-
-          .mobile-menu {
-            position: absolute;
-            top: 82px;
-            left: 0;
-            width: 100%;
-            background: var(--black);
-            padding: 12px 20px 22px;
-            box-sizing: border-box;
-            border-top: 1px solid #333;
-          }
-
-          .mobile-menu a {
             display: block;
-            color: #ccc;
-            text-decoration: none;
-            padding: 14px 6px;
-            font-size: 14px;
-            border-bottom: 1px solid #292929;
           }
 
-          .mobile-menu a.active {
+          .admin-close {
+            color: #fff;
+            font-size: 38px;
+            line-height: 1;
+            font-weight: 200;
+            margin-top: -3px;
+          }
+
+          /* Logo */
+
+          .admin-mobile-logo {
+            text-align: center;
+            line-height: 1;
+          }
+
+          .admin-mobile-logo h2 {
+            margin: 0;
             color: var(--gold);
+            font-size: 23px;
+            font-weight: 500;
+            letter-spacing: 3px;
+            font-family: var(--font-playfair), serif;
+          }
+
+          .admin-mobile-logo p {
+            margin: 10px 0 0;
+            color: #aaa;
+            font-size: 10px;
+            letter-spacing: 5px;
+            font-family: inherit;
+          }
+
+          .admin-menu-spacer {
+            width: 42px;
+          }
+
+          /* Dropdown */
+
+          .admin-mobile-menu {
+            width: 100%;
+            background: var(--cream);
+            border-top: 1px solid #ded9d0;
+          }
+
+          .admin-mobile-link {
+            display: flex !important;
+            align-items: center;
+            width: 100%;
+            min-height: 69px;
+            padding: 0 32px !important;
+            box-sizing: border-box;
+            border-bottom: 1px solid #ded9d0;
+            color: var(--black) !important;
+            background: var(--cream) !important;
+            text-decoration: none !important;
+            text-transform: uppercase;
+            font-size: 13px !important;
+            font-weight: 400 !important;
+            letter-spacing: 1.5px;
+          }
+
+          .admin-mobile-link:visited,
+          .admin-mobile-link:hover,
+          .admin-mobile-link:focus {
+            color: var(--black) !important;
+            text-decoration: none !important;
+          }
+
+          .admin-mobile-link.admin-mobile-active {
+            color: var(--gold) !important;
           }
         }
       `}</style>
