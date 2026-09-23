@@ -7,9 +7,12 @@ import { useCart } from "@/context/CartContext";
 
 export default function Navbar() {
   const { itemCount } = useCart();
+
   const [searchOpen, setSearchOpen] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [query, setQuery] = useState("");
   const [results, setResults] = useState([]);
+
   const searchRef = useRef(null);
 
   useEffect(() => {
@@ -35,47 +38,74 @@ export default function Navbar() {
         setQuery("");
       }
     }
+
     document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
   }, []);
 
+  const closeMobileMenu = () => setMobileMenuOpen(false);
+
   return (
-    <nav
-      style={{
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "space-between",
-        padding: "18px 60px",
-        backgroundColor: "var(--cream)",
-        borderBottom: "1px solid #E5DFD3",
-        position: "relative",
-        minHeight: "80px",
-      }}
-    >
-      <div style={{ display: "flex", gap: "32px" }}>
+    <nav className="navbar">
+      {/* MOBILE HAMBURGER */}
+      <button
+        className="mobile-menu-button"
+        onClick={() => setMobileMenuOpen((open) => !open)}
+        aria-label="Open menu"
+        aria-expanded={mobileMenuOpen}
+      >
+        {mobileMenuOpen ? (
+          <svg
+            width="22"
+            height="22"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="1.5"
+          >
+            <line x1="5" y1="5" x2="19" y2="19" />
+            <line x1="19" y1="5" x2="5" y2="19" />
+          </svg>
+        ) : (
+          <svg
+            width="22"
+            height="22"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="1.5"
+          >
+            <line x1="3" y1="6" x2="21" y2="6" />
+            <line x1="3" y1="12" x2="21" y2="12" />
+            <line x1="3" y1="18" x2="21" y2="18" />
+          </svg>
+        )}
+      </button>
+
+      {/* DESKTOP LINKS */}
+      <div className="desktop-nav-links">
         <Link href="/" style={navLinkStyle}>
           Home
         </Link>
+
         <Link href="/shop" style={navLinkStyle}>
           Shop
         </Link>
+
         <Link href="/about" style={navLinkStyle}>
           About
         </Link>
+
         <Link href="/contact" style={navLinkStyle}>
           Contact
         </Link>
       </div>
 
-      <div
-        style={{
-          textAlign: "center",
-          position: "absolute",
-          left: "50%",
-          top: "50%",
-          transform: "translate(-50%, -50%)",
-        }}
-      >
+      {/* LOGO */}
+      <Link href="/" className="navbar-logo">
         <svg
           width="20"
           height="20"
@@ -83,49 +113,27 @@ export default function Navbar() {
           fill="none"
           stroke="var(--gold)"
           strokeWidth="1.2"
-          style={{ marginBottom: "4px" }}
+          className="navbar-diamond"
         >
           <path d="M6 3h12l4 6-10 12L2 9z" />
           <path d="M2 9h20M9 3l-3 6 6 12 6-12-3-6" />
         </svg>
-        <h1
-          style={{
-            fontFamily: "var(--font-playfair), serif",
-            fontSize: "24px",
-            letterSpacing: "3px",
-            margin: 0,
-          }}
-          s
-        >
-          AURELLE
-        </h1>
-        <p
-          style={{
-            fontSize: "9px",
-            letterSpacing: "3px",
-            color: "var(--black)",
-            marginTop: "2px",
-          }}
-        >
-          JEWELRY
-        </p>
-      </div>
 
-      <div style={{ display: "flex", gap: "20px", alignItems: "center" }}>
-        <div ref={searchRef} style={{ position: "relative" }}>
+        <h1>AURELLE</h1>
+        <p>JEWELRY</p>
+      </Link>
+
+      {/* RIGHT ICONS */}
+      <div className="navbar-actions">
+        <div ref={searchRef} className="navbar-search">
           <button
+            className="navbar-icon-button"
             onClick={() => setSearchOpen((open) => !open)}
-            style={{
-              background: "none",
-              border: "none",
-              cursor: "pointer",
-              padding: 0,
-              display: "flex",
-            }}
+            aria-label="Search"
           >
             <svg
-              width="18"
-              height="18"
+              width="19"
+              height="19"
               viewBox="0 0 24 24"
               fill="none"
               stroke="currentColor"
@@ -137,95 +145,52 @@ export default function Navbar() {
           </button>
 
           {searchOpen && (
-            <div
-              style={{
-                position: "absolute",
-                top: "36px",
-                right: 0,
-                width: "280px",
-                backgroundColor: "#fff",
-                border: "1px solid #E5DFD3",
-                boxShadow: "0 4px 16px rgba(0,0,0,0.08)",
-                zIndex: 20,
-              }}
-            >
+            <div className="search-dropdown">
               <input
                 autoFocus
                 type="text"
                 placeholder="Search products..."
                 value={query}
-                onChange={(e) => setQuery(e.target.value)}
-                style={{
-                  width: "100%",
-                  padding: "12px 14px",
-                  border: "none",
-                  borderBottom: "1px solid #E5DFD3",
-                  fontSize: "14px",
-                  boxSizing: "border-box",
-                  outline: "none",
+                onChange={(e) => {
+                  setQuery(e.target.value);
+
+                  if (!e.target.value.trim()) {
+                    setResults([]);
+                  }
                 }}
               />
+
               {query.trim() && (
-                <div style={{ maxHeight: "280px", overflowY: "auto" }}>
+                <div className="search-results">
                   {results.length > 0 ? (
                     results.map((p) => (
                       <Link
                         key={p.id}
                         href={`/product/${p.id}`}
+                        className="search-result-item"
                         onClick={() => {
                           setSearchOpen(false);
                           setQuery("");
                         }}
-                        style={{
-                          display: "flex",
-                          alignItems: "center",
-                          gap: "12px",
-                          padding: "10px 14px",
-                          textDecoration: "none",
-                          color: "var(--black)",
-                          borderBottom: "1px solid #F0EBE0",
-                        }}
                       >
-                        <div
-                          style={{
-                            position: "relative",
-                            width: "36px",
-                            height: "36px",
-                          }}
-                        >
+                        <div className="search-result-image">
                           <Image
                             src={p.image}
                             alt={p.title}
                             fill
+                            sizes="36px"
                             style={{ objectFit: "cover" }}
                           />
                         </div>
+
                         <div>
-                          <p style={{ fontSize: "13px", margin: 0 }}>
-                            {p.title}
-                          </p>
-                          <p
-                            style={{
-                              fontSize: "12px",
-                              color: "var(--gold)",
-                              margin: 0,
-                            }}
-                          >
-                            ${p.price}
-                          </p>
+                          <p className="search-result-title">{p.title}</p>
+                          <p className="search-result-price">${p.price}</p>
                         </div>
                       </Link>
                     ))
                   ) : (
-                    <p
-                      style={{
-                        padding: "14px",
-                        fontSize: "13px",
-                        color: "var(--gray-text)",
-                      }}
-                    >
-                      No products found.
-                    </p>
+                    <p className="no-search-results">No products found.</p>
                   )}
                 </div>
               )}
@@ -235,11 +200,12 @@ export default function Navbar() {
 
         <Link
           href="/account"
-          style={{ color: "var(--black)", display: "flex" }}
+          className="navbar-action-link"
+          aria-label="Account"
         >
           <svg
-            width="18"
-            height="18"
+            width="19"
+            height="19"
             viewBox="0 0 24 24"
             fill="none"
             stroke="currentColor"
@@ -252,11 +218,12 @@ export default function Navbar() {
 
         <Link
           href="/cart"
-          style={{ position: "relative", color: "var(--black)" }}
+          className="navbar-action-link cart-link"
+          aria-label="Cart"
         >
           <svg
-            width="18"
-            height="18"
+            width="19"
+            height="19"
             viewBox="0 0 24 24"
             fill="none"
             stroke="currentColor"
@@ -266,26 +233,31 @@ export default function Navbar() {
             <circle cx="20" cy="21" r="1" />
             <path d="M1 1h4l2.7 13.4a2 2 0 002 1.6h9.7a2 2 0 002-1.6L23 6H6" />
           </svg>
-          <span
-            style={{
-              position: "absolute",
-              top: "-8px",
-              right: "-8px",
-              backgroundColor: "var(--black)",
-              color: "white",
-              fontSize: "9px",
-              width: "15px",
-              height: "15px",
-              borderRadius: "50%",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-            }}
-          >
-            {itemCount}
-          </span>
+
+          {itemCount > 0 && <span className="cart-count">{itemCount}</span>}
         </Link>
       </div>
+
+      {/* MOBILE MENU */}
+      {mobileMenuOpen && (
+        <div className="mobile-nav-menu">
+          <Link href="/" onClick={closeMobileMenu}>
+            Home
+          </Link>
+
+          <Link href="/shop" onClick={closeMobileMenu}>
+            Shop
+          </Link>
+
+          <Link href="/about" onClick={closeMobileMenu}>
+            About
+          </Link>
+
+          <Link href="/contact" onClick={closeMobileMenu}>
+            Contact
+          </Link>
+        </div>
+      )}
     </nav>
   );
 }
