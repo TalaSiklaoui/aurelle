@@ -17,17 +17,32 @@ export default async function AccountPage() {
 
   return (
     <section
-      style={{ padding: "60px 20px", maxWidth: "700px", margin: "0 auto" }}
+      style={{
+        padding: "50px 20px 70px",
+        maxWidth: "700px",
+        margin: "0 auto",
+      }}
     >
+      {/* Account header */}
       <div
         style={{
           display: "flex",
           justifyContent: "space-between",
           alignItems: "center",
+          gap: "20px",
           marginBottom: "8px",
         }}
       >
-        <h1>My Account</h1>
+        <h1
+          style={{
+            margin: 0,
+            fontSize: "34px",
+            lineHeight: "1.2",
+          }}
+        >
+          My Account
+        </h1>
+
         <form
           action={async () => {
             "use server";
@@ -37,28 +52,56 @@ export default async function AccountPage() {
           <button
             type="submit"
             style={{
-              background: "none",
-              border: "1px solid #ddd",
-              padding: "8px 16px",
-              borderRadius: "4px",
+              backgroundColor: "transparent",
+              color: "var(--black)",
+              border: "1px solid var(--black)",
+              padding: "9px 16px",
               cursor: "pointer",
-              fontSize: "13px",
+              fontSize: "11px",
+              letterSpacing: "1px",
+              textTransform: "uppercase",
+              whiteSpace: "nowrap",
             }}
           >
-            Log out
+            Log Out
           </button>
         </form>
       </div>
-      <p style={{ color: "var(--gray-text)", marginBottom: "32px" }}>
+
+      {/* Customer information */}
+      <p
+        style={{
+          color: "var(--gray-text)",
+          margin: "0 0 28px",
+          fontSize: "14px",
+          lineHeight: "1.5",
+        }}
+      >
         {session.user.name} · {session.user.email}
       </p>
 
-      <h3 style={{ marginBottom: "16px" }}>Your Orders</h3>
+      {/* Orders */}
+      <h2
+        style={{
+          margin: "0 0 16px",
+          fontSize: "22px",
+        }}
+      >
+        Your Orders
+      </h2>
 
       {orders.length === 0 ? (
-        <p style={{ color: "var(--gray-text)" }}>No orders yet.</p>
+        <p style={{ color: "var(--gray-text)", margin: 0 }}>
+          No orders yet.
+        </p>
       ) : (
-        <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            gap: "16px",
+          }}
+        >
           {orders.map((order) => (
             <div
               key={order.id}
@@ -69,14 +112,23 @@ export default async function AccountPage() {
                 border: "1px solid #f0eee9",
               }}
             >
+              {/* Order header */}
               <div
                 style={{
                   display: "flex",
                   justifyContent: "space-between",
+                  alignItems: "flex-start",
+                  gap: "12px",
                   marginBottom: "12px",
                 }}
               >
-                <p style={{ fontWeight: "600" }}>
+                <p
+                  style={{
+                    fontWeight: "600",
+                    margin: 0,
+                    lineHeight: "1.5",
+                  }}
+                >
                   Order placed{" "}
                   {new Date(order.createdAt).toLocaleDateString("en-US", {
                     year: "numeric",
@@ -84,6 +136,7 @@ export default async function AccountPage() {
                     day: "numeric",
                   })}
                 </p>
+
                 <span
                   style={{
                     fontSize: "11px",
@@ -91,20 +144,24 @@ export default async function AccountPage() {
                     backgroundColor:
                       statusColors[order.status]?.bg || "#fdf3e0",
                     color: statusColors[order.status]?.text || "#a9791f",
-                    padding: "4px 10px",
+                    padding: "5px 10px",
                     borderRadius: "3px",
                     fontWeight: "600",
+                    whiteSpace: "nowrap",
                   }}
                 >
                   {order.status}
                 </span>
               </div>
+
+              {/* Products */}
               {order.items.map((item) => (
                 <div
                   key={item.id}
                   style={{
                     display: "flex",
                     justifyContent: "space-between",
+                    gap: "16px",
                     fontSize: "14px",
                     padding: "4px 0",
                   }}
@@ -112,11 +169,19 @@ export default async function AccountPage() {
                   <span>
                     {item.title} × {item.quantity}
                   </span>
-                  <span style={{ color: "var(--gray-text)" }}>
+
+                  <span
+                    style={{
+                      color: "var(--gray-text)",
+                      whiteSpace: "nowrap",
+                    }}
+                  >
                     ${(item.price * item.quantity).toFixed(2)}
                   </span>
                 </div>
               ))}
+
+              {/* Subtotal */}
               <div
                 style={{
                   display: "flex",
@@ -128,10 +193,13 @@ export default async function AccountPage() {
                 }}
               >
                 <span>Subtotal</span>
+
                 <span style={{ color: "var(--gray-text)" }}>
                   ${order.subtotal.toFixed(2)}
                 </span>
               </div>
+
+              {/* Delivery */}
               <div
                 style={{
                   display: "flex",
@@ -141,13 +209,22 @@ export default async function AccountPage() {
                 }}
               >
                 <span>Delivery</span>
+
                 <span style={{ color: "var(--gray-text)" }}>
                   {order.shippingCost === 0
                     ? "Free"
                     : `$${order.shippingCost.toFixed(2)}`}
                 </span>
               </div>
-              <p style={{ marginTop: "10px", fontWeight: "600" }}>
+
+              {/* Total */}
+              <p
+                style={{
+                  margin: "10px 0 0",
+                  fontWeight: "600",
+                  fontSize: "15px",
+                }}
+              >
                 Total: ${order.total.toFixed(2)}
               </p>
             </div>
