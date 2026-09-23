@@ -1,36 +1,91 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# AURELLE — Fine Jewelry E-Commerce
 
-## Getting Started
+AURELLE is a full-stack e-commerce web application for a fictional fine jewelry brand. The project was designed and developed as a portfolio project, with a focus on responsive UI, authentication, shopping functionality, order management, and administration.
 
-First, run the development server:
+## Live Demo
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+https://aurelle-brown.vercel.app
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Features
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+### Customer Experience
+- Responsive jewelry storefront for desktop and mobile
+- Product catalog organized by category
+- Product detail pages
+- Shopping cart
+- Checkout flow
+- Customer registration and login
+- Google authentication
+- Email verification for newly registered accounts
+- Customer account page
+- Order history
+- Contact form
+- Responsive navigation and mobile menu
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### Admin Panel
+- Secure admin authentication
+- Dashboard with store statistics
+- Revenue, order, product, and customer overview
+- Top-selling products
+- Recent orders
+- Order management
+- Order status updates
+- Product management
+- Add, edit, and delete products
+- Product image uploads
+- Customer message management
+- Responsive admin interface
 
-## Learn More
+## Tech Stack
 
-To learn more about Next.js, take a look at the following resources:
+- Next.js
+- React
+- JavaScript
+- Auth.js / NextAuth
+- Prisma ORM
+- PostgreSQL
+- Neon
+- Vercel
+- Google OAuth
+- Nodemailer
+- HTML / CSS
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Database
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+The application uses PostgreSQL hosted on Neon and Prisma ORM for database access and management.
 
-## Deploy on Vercel
+The database stores information including:
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+- Products
+- Customers
+- Orders
+- Order items
+- Contact messages
+- Authentication and verification data
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Authentication
+
+AURELLE supports both traditional email/password authentication and Google authentication.
+
+Customer accounts include email verification before activation. Administrative access uses a separate protected authentication flow.
+
+## Responsive Design
+
+The storefront and administration interface are designed to work across desktop and mobile devices, with responsive layouts and dedicated mobile navigation.
+
+## Deployment
+
+The application is deployed on Vercel.
+
+**Live site:** https://aurelle-brown.vercel.app
+
+## Project Purpose
+
+AURELLE was built as a portfolio project to demonstrate full-stack web development skills, including frontend development, responsive design, authentication, database integration, API development, deployment, and administrative functionality.
+
+## Author
+
+**Tala Siklaoui**
+## Author
+
+**Tala Siklaoui**
