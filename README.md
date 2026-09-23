@@ -86,6 +86,3 @@ AURELLE was built as a portfolio project to demonstrate full-stack web developme
 ## Author
 
 **Tala Siklaoui**
-## Author
-
-**Tala Siklaoui**
