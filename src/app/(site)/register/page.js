@@ -20,6 +20,8 @@ function RegisterForm() {
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+
   const [resending, setResending] = useState(false);
   const [resendMessage, setResendMessage] = useState("");
   const [error, setError] = useState("");
@@ -28,24 +30,63 @@ function RegisterForm() {
 
   async function handleSubmit(e) {
     e.preventDefault();
+
     setLoading(true);
     setError("");
 
-    const res = await fetch("/api/customers/register", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email, password, fullName }),
-    });
+    try {
+      const res = await fetch("/api/customers/register", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email,
+          password,
+          fullName,
+        }),
+      });
 
-    setLoading(false);
+      if (!res.ok) {
+        const data = await res.json();
+        setError(data.error || "Something went wrong.");
+        return;
+      }
 
-    if (!res.ok) {
-      const data = await res.json();
-      setError(data.error || "Something went wrong.");
-      return;
+      setRegistered(true);
+    } catch {
+      setError("Something went wrong.");
+    } finally {
+      setLoading(false);
     }
+  }
 
-    setRegistered(true);
+  async function handleResend() {
+    setResending(true);
+    setResendMessage("");
+
+    try {
+      const res = await fetch("/api/customers/resend-verification", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email }),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        setResendMessage(data.error || "Could not resend verification email.");
+        return;
+      }
+
+      setResendMessage("Verification email sent again. Check your inbox.");
+    } catch {
+      setResendMessage("Could not resend verification email.");
+    } finally {
+      setResending(false);
+    }
   }
 
   if (registered) {
@@ -65,15 +106,24 @@ function RegisterForm() {
             padding: "40px",
             borderRadius: "8px",
             border: "1px solid #f0eee9",
+            width: "100%",
             maxWidth: "380px",
             textAlign: "center",
+            boxSizing: "border-box",
           }}
         >
           <h2 style={{ marginBottom: "12px" }}>Check Your Email</h2>
-          <p style={{ color: "var(--gray-text)" }}>
+
+          <p
+            style={{
+              color: "var(--gray-text)",
+              lineHeight: "1.6",
+            }}
+          >
             We sent a verification link to <strong>{email}</strong>. Click it to
             activate your account.
           </p>
+
           <button
             type="button"
             onClick={handleResend}
@@ -88,6 +138,7 @@ function RegisterForm() {
               fontSize: "14px",
               cursor: resending ? "not-allowed" : "pointer",
               marginTop: "22px",
+              opacity: resending ? 0.7 : 1,
             }}
           >
             {resending ? "Sending..." : "Resend Verification Email"}
@@ -128,11 +179,18 @@ function RegisterForm() {
           border: "1px solid #f0eee9",
           width: "100%",
           maxWidth: "380px",
+          boxSizing: "border-box",
         }}
       >
-        <h2 style={{ textAlign: "center", marginBottom: "8px" }}>
+        <h2
+          style={{
+            textAlign: "center",
+            marginBottom: "8px",
+          }}
+        >
           Create Account
         </h2>
+
         <p
           style={{
             color: "var(--gray-text)",
@@ -144,7 +202,10 @@ function RegisterForm() {
           Welcome to AURELLE — create your account
         </p>
 
+        {/* FULL NAME */}
+
         <label style={labelStyle}>Full Name</label>
+
         <input
           type="text"
           value={fullName}
@@ -153,7 +214,10 @@ function RegisterForm() {
           style={inputStyle}
         />
 
+        {/* EMAIL */}
+
         <label style={labelStyle}>Email</label>
+
         <input
           type="email"
           value={email}
@@ -162,19 +226,40 @@ function RegisterForm() {
           style={inputStyle}
         />
 
+        {/* PASSWORD */}
+
         <label style={labelStyle}>Password</label>
-        <input
-          type="password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          required
-          minLength={6}
-          style={inputStyle}
-        />
+
+        <div style={passwordWrapperStyle}>
+          <input
+            type={showPassword ? "text" : "password"}
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+            minLength={6}
+            style={passwordInputStyle}
+          />
+
+          <button
+            type="button"
+            onClick={() => setShowPassword((current) => !current)}
+            aria-label={showPassword ? "Hide password" : "Show password"}
+            title={showPassword ? "Hide password" : "Show password"}
+            style={eyeButtonStyle}
+          >
+            <EyeIcon hidden={showPassword} />
+          </button>
+        </div>
+
+        {/* ERRORS */}
 
         {error && (
           <p
-            style={{ color: "#b23b3b", fontSize: "13px", marginBottom: "16px" }}
+            style={{
+              color: "#b23b3b",
+              fontSize: "13px",
+              marginBottom: "16px",
+            }}
           >
             {error}
           </p>
@@ -194,6 +279,8 @@ function RegisterForm() {
           </p>
         )}
 
+        {/* CREATE ACCOUNT */}
+
         <button
           type="submit"
           disabled={loading}
@@ -207,10 +294,13 @@ function RegisterForm() {
             fontSize: "14px",
             cursor: loading ? "not-allowed" : "pointer",
             marginBottom: "16px",
+            opacity: loading ? 0.7 : 1,
           }}
         >
           {loading ? "Creating..." : "Create Account"}
         </button>
+
+        {/* DIVIDER */}
 
         <div
           style={{
@@ -220,18 +310,42 @@ function RegisterForm() {
             margin: "24px 0",
           }}
         >
-          <div style={{ flex: 1, height: "1px", backgroundColor: "#e5e0d8" }} />
-          <span style={{ fontSize: "12px", color: "var(--gray-text)" }}>
+          <div
+            style={{
+              flex: 1,
+              height: "1px",
+              backgroundColor: "#e5e0d8",
+            }}
+          />
+
+          <span
+            style={{
+              fontSize: "12px",
+              color: "var(--gray-text)",
+            }}
+          >
             or
           </span>
-          <div style={{ flex: 1, height: "1px", backgroundColor: "#e5e0d8" }} />
+
+          <div
+            style={{
+              flex: 1,
+              height: "1px",
+              backgroundColor: "#e5e0d8",
+            }}
+          />
         </div>
+
+        {/* GOOGLE */}
 
         <button
           type="button"
           onClick={() => {
             document.cookie = "google_intent=register; path=/; max-age=60";
-            signIn("google", { callbackUrl: "/account" });
+
+            signIn("google", {
+              callbackUrl: "/account",
+            });
           }}
           style={{
             width: "100%",
@@ -261,41 +375,38 @@ function RegisterForm() {
           }}
         >
           Already have an account?{" "}
-          <Link href="/login" style={{ color: "var(--gold)" }}>
+          <Link
+            href="/login"
+            style={{
+              color: "var(--gold)",
+            }}
+          >
             Log in
           </Link>
         </p>
       </form>
     </div>
   );
+}
 
-  async function handleResend() {
-    setResending(true);
-    setResendMessage("");
+function EyeIcon({ hidden }) {
+  return (
+    <svg
+      width="19"
+      height="19"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.5"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <path d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6S2 12 2 12z" />
+      <circle cx="12" cy="12" r="2.5" />
 
-    try {
-      const res = await fetch("/api/customers/resend-verification", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ email }),
-      });
-
-      const data = await res.json();
-
-      if (!res.ok) {
-        setResendMessage(data.error || "Could not resend verification email.");
-        return;
-      }
-
-      setResendMessage("Verification email sent again. Check your inbox.");
-    } catch {
-      setResendMessage("Could not resend verification email.");
-    } finally {
-      setResending(false);
-    }
-  }
+      {hidden && <path d="M4 4l16 16" />}
+    </svg>
+  );
 }
 
 function GoogleIcon() {
@@ -305,14 +416,17 @@ function GoogleIcon() {
         fill="#FFC107"
         d="M43.6 20.5H42V20H24v8h11.3c-1.6 4.6-6 8-11.3 8-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.9 1.2 8 3.1l5.7-5.7C34.6 6.5 29.6 4.5 24 4.5 12.7 4.5 3.5 13.7 3.5 25S12.7 45.5 24 45.5 44.5 36.3 44.5 25c0-1.6-.2-3.1-.4-4.5z"
       />
+
       <path
         fill="#FF3D00"
         d="M6.3 14.7l6.6 4.8C14.5 15.5 18.9 12.5 24 12.5c3.1 0 5.9 1.2 8 3.1l5.7-5.7C34.6 6.5 29.6 4.5 24 4.5c-7.6 0-14.1 4.3-17.7 10.2z"
       />
+
       <path
         fill="#4CAF50"
         d="M24 45.5c5.5 0 10.4-1.9 14.2-5.1l-6.6-5.4c-2 1.4-4.6 2.3-7.6 2.3-5.3 0-9.7-3.4-11.3-8.1l-6.6 5.1C9.7 41.1 16.3 45.5 24 45.5z"
       />
+
       <path
         fill="#1976D2"
         d="M43.6 20.5H42V20H24v8h11.3c-.8 2.2-2.2 4.1-4.1 5.5l6.6 5.4C41.8 35.5 44.5 30.6 44.5 25c0-1.6-.2-3.1-.4-4.5z"
@@ -337,4 +451,35 @@ const inputStyle = {
   fontSize: "14px",
   fontFamily: "inherit",
   boxSizing: "border-box",
+};
+
+const passwordWrapperStyle = {
+  position: "relative",
+  width: "100%",
+  marginBottom: "18px",
+};
+
+const passwordInputStyle = {
+  width: "100%",
+  padding: "10px 44px 10px 12px",
+  border: "1px solid #ddd",
+  borderRadius: "3px",
+  fontSize: "14px",
+  fontFamily: "inherit",
+  boxSizing: "border-box",
+};
+
+const eyeButtonStyle = {
+  position: "absolute",
+  right: "10px",
+  top: "50%",
+  transform: "translateY(-50%)",
+  border: "none",
+  background: "transparent",
+  padding: "5px",
+  color: "#777",
+  cursor: "pointer",
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
 };
