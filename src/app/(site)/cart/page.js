@@ -31,275 +31,459 @@ export default function CartPage() {
   const shippingCost = cartTotal >= SHIPPING_THRESHOLD ? 0 : SHIPPING_FEE;
 
   return (
-    <div
-      className="cart-page"
-      style={{
-        padding: "60px 40px",
-        maxWidth: "1200px",
-        margin: "0 auto",
-      }}
-    >
-      <h1
-        style={{
-          fontFamily: "var(--font-playfair), serif",
-          marginBottom: "40px",
-        }}
-      >
-        Your Cart
-      </h1>
+    <>
+      <div className="cart-page">
+        <h1 className="cart-title">Your Cart</h1>
 
-      <div
-        style={{
-          display: "flex",
-          gap: "40px",
-          alignItems: "flex-start",
-          flexWrap: "wrap",
-        }}
-      >
-        {/* CART PRODUCTS */}
-        <div style={{ flex: "2 1 500px" }}>
-          {/* DESKTOP HEADER */}
-          <div
-            className="cart-header"
-            style={{
-              display: "grid",
-              gridTemplateColumns: "2fr 1fr 1fr 1fr auto",
-              padding: "0 0 12px",
-              borderBottom: "1px solid #E5E0D8",
-              color: "var(--gray-text)",
-              fontSize: "13px",
-            }}
-          >
-            <span>PRODUCT</span>
-            <span>PRICE</span>
-            <span>QUANTITY</span>
-            <span>TOTAL</span>
-            <span></span>
-          </div>
-
-          {/* CART ITEMS */}
-          {cartItems.map((item) => (
-            <div
-              key={`${item.id}-${item.size || "default"}`}
-              className="cart-item"
-              style={{
-                display: "grid",
-                gridTemplateColumns: "2fr 1fr 1fr 1fr auto",
-                alignItems: "center",
-                padding: "20px 0",
-                borderBottom: "1px solid #E5E0D8",
-              }}
-            >
-              {/* PRODUCT */}
-              <div
-                className="cart-product"
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: "16px",
-                }}
-              >
-                <div
-                  style={{
-                    position: "relative",
-                    width: "64px",
-                    height: "64px",
-                    flexShrink: 0,
-                  }}
-                >
-                  <Image
-                    src={item.image}
-                    alt={item.title}
-                    fill
-                    style={{ objectFit: "cover" }}
-                  />
-                </div>
-
-                <div>
-                  <span
-                    style={{
-                      fontFamily: "var(--font-playfair), serif",
-                      display: "block",
-                    }}
-                  >
-                    {item.title}
-                  </span>
-
-                  {item.size && (
-                    <span
-                      style={{
-                        display: "block",
-                        fontSize: "12px",
-                        color: "var(--gray-text)",
-                        marginTop: "4px",
-                      }}
-                    >
-                      Size: {item.size}
-                    </span>
-                  )}
-                </div>
-              </div>
-
-              {/* PRICE */}
-              <span className="cart-price">${item.price}</span>
-
-              {/* QUANTITY */}
-              <div
-                className="cart-quantity"
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: "8px",
-                }}
-              >
-                <button
-                  onClick={() =>
-                    updateQuantity(item.id, item.size, item.quantity - 1)
-                  }
-                  style={qtyBtn}
-                  aria-label={`Decrease ${item.title} quantity`}
-                >
-                  −
-                </button>
-
-                <span>{item.quantity}</span>
-
-                <button
-                  onClick={() =>
-                    updateQuantity(item.id, item.size, item.quantity + 1)
-                  }
-                  style={qtyBtn}
-                  aria-label={`Increase ${item.title} quantity`}
-                >
-                  +
-                </button>
-              </div>
-
-              {/* TOTAL */}
-              <span className="cart-item-total">
-                ${item.price * item.quantity}
-              </span>
-
-              {/* REMOVE */}
-              <button
-                className="cart-remove"
-                onClick={() => removeFromCart(item.id, item.size)}
-                aria-label={`Remove ${item.title} from cart`}
-                style={{
-                  background: "none",
-                  border: "none",
-                  cursor: "pointer",
-                  color: "var(--gray-text)",
-                }}
-              >
-                ×
-              </button>
+        <div className="cart-layout">
+          {/* CART PRODUCTS */}
+          <div className="cart-products">
+            {/* DESKTOP HEADER */}
+            <div className="cart-header">
+              <span>PRODUCT</span>
+              <span>PRICE</span>
+              <span>QUANTITY</span>
+              <span>TOTAL</span>
+              <span></span>
             </div>
-          ))}
 
-          <Link
-            href="/shop"
-            style={{
-              display: "inline-block",
-              marginTop: "20px",
-              color: "var(--gray-text)",
-              fontSize: "14px",
-            }}
-          >
-            ‹ Continue Shopping
-          </Link>
-        </div>
+            {/* CART ITEMS */}
+            {cartItems.map((item) => (
+              <div
+                key={`${item.id}-${item.size || "default"}`}
+                className="cart-item"
+              >
+                {/* PRODUCT */}
+                <div className="cart-product">
+                  <div className="cart-image">
+                    <Image
+                      src={item.image}
+                      alt={item.title}
+                      fill
+                      sizes="(max-width: 768px) 104px, 64px"
+                      style={{ objectFit: "cover" }}
+                    />
+                  </div>
 
-        {/* CART TOTALS */}
-        <div
-          className="cart-summary"
-          style={{
-            flex: "1 1 280px",
-            background: "var(--cream)",
-            border: "1px solid #E5E0D8",
-            padding: "28px",
-          }}
-        >
-          <h3
-            style={{
-              fontFamily: "var(--font-playfair), serif",
-              marginBottom: "20px",
-            }}
-          >
-            Cart Totals
-          </h3>
+                  <div className="cart-product-info">
+                    <span className="cart-product-title">{item.title}</span>
 
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "space-between",
-              marginBottom: "12px",
-            }}
-          >
-            <span>Subtotal</span>
-            <span>${cartTotal}</span>
+                    {item.size && (
+                      <span className="cart-size">Size: {item.size}</span>
+                    )}
+
+                    {/* Mobile price */}
+                    <span className="mobile-price">
+                      ${item.price.toFixed(2)}
+                    </span>
+
+                    {/* Mobile quantity */}
+                    <div className="mobile-quantity">
+                      <button
+                        type="button"
+                        onClick={() =>
+                          updateQuantity(item.id, item.quantity - 1, item.size)
+                        }
+                        className="qty-button"
+                        aria-label={`Decrease ${item.title} quantity`}
+                      >
+                        −
+                      </button>
+
+                      <span className="qty-number">{item.quantity}</span>
+
+                      <button
+                        type="button"
+                        onClick={() =>
+                          updateQuantity(item.id, item.quantity + 1, item.size)
+                        }
+                        className="qty-button"
+                        aria-label={`Increase ${item.title} quantity`}
+                      >
+                        +
+                      </button>
+                    </div>
+                  </div>
+                </div>
+
+                {/* DESKTOP PRICE */}
+                <span className="cart-price">${item.price.toFixed(2)}</span>
+
+                {/* DESKTOP QUANTITY */}
+                <div className="cart-quantity">
+                  <button
+                    type="button"
+                    onClick={() =>
+                      updateQuantity(item.id, item.quantity - 1, item.size)
+                    }
+                    className="qty-button"
+                    aria-label={`Decrease ${item.title} quantity`}
+                  >
+                    −
+                  </button>
+
+                  <span className="qty-number">{item.quantity}</span>
+
+                  <button
+                    type="button"
+                    onClick={() =>
+                      updateQuantity(item.id, item.quantity + 1, item.size)
+                    }
+                    className="qty-button"
+                    aria-label={`Increase ${item.title} quantity`}
+                  >
+                    +
+                  </button>
+                </div>
+
+                {/* TOTAL */}
+                <span className="cart-item-total">
+                  ${(item.price * item.quantity).toFixed(2)}
+                </span>
+
+                {/* REMOVE */}
+                <button
+                  type="button"
+                  className="cart-remove"
+                  onClick={() => removeFromCart(item.id, item.size)}
+                  aria-label={`Remove ${item.title} from cart`}
+                >
+                  ×
+                </button>
+              </div>
+            ))}
+
+            <Link href="/shop" className="continue-shopping">
+              ‹ Continue Shopping
+            </Link>
           </div>
 
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "space-between",
-              marginBottom: "12px",
-            }}
-          >
-            <span>Delivery</span>
-            <span>{shippingCost === 0 ? "Free" : `$${shippingCost}`}</span>
-          </div>
+          {/* CART TOTALS */}
+          <div className="cart-summary">
+            <h3>Cart Totals</h3>
 
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "space-between",
-              fontWeight: 600,
-              borderTop: "1px solid #E5E0D8",
-              paddingTop: "12px",
-              marginBottom: "20px",
-            }}
-          >
-            <span>Total</span>
-            <span>${cartTotal + shippingCost}</span>
-          </div>
+            <div className="summary-row">
+              <span>Subtotal</span>
+              <span>${cartTotal.toFixed(2)}</span>
+            </div>
 
-          <Link href="/checkout">
-            <button
-              style={{
-                width: "100%",
-                padding: "14px",
-                background: "var(--black)",
-                color: "#fff",
-                border: "none",
-                cursor: "pointer",
-              }}
-            >
+            <div className="summary-row">
+              <span>Delivery</span>
+              <span>
+                {shippingCost === 0 ? "Free" : `$${shippingCost.toFixed(2)}`}
+              </span>
+            </div>
+
+            <div className="summary-row total-row">
+              <span>Total</span>
+              <span>${(cartTotal + shippingCost).toFixed(2)}</span>
+            </div>
+
+            <Link href="/checkout" className="checkout-link">
               CHECKOUT
-            </button>
-          </Link>
+            </Link>
 
-          <p
-            style={{
-              fontSize: "12px",
-              color: "var(--gray-text)",
-              marginTop: "12px",
-              textAlign: "center",
-            }}
-          >
-            Free delivery on all orders over $250
-          </p>
+            <p className="delivery-note">
+              Free delivery on all orders over $250
+            </p>
+          </div>
         </div>
       </div>
-    </div>
+
+      <style jsx>{`
+        .cart-page {
+          padding: 60px 40px;
+          max-width: 1200px;
+          margin: 0 auto;
+        }
+
+        .cart-title {
+          font-family: var(--font-playfair), serif;
+          margin: 0 0 40px;
+        }
+
+        .cart-layout {
+          display: flex;
+          gap: 40px;
+          align-items: flex-start;
+          flex-wrap: wrap;
+        }
+
+        .cart-products {
+          flex: 2 1 500px;
+          min-width: 0;
+        }
+
+        .cart-header {
+          display: grid;
+          grid-template-columns: 2fr 1fr 1fr 1fr auto;
+          padding-bottom: 12px;
+          border-bottom: 1px solid #e5e0d8;
+          color: var(--gray-text);
+          font-size: 13px;
+        }
+
+        .cart-item {
+          display: grid;
+          grid-template-columns: 2fr 1fr 1fr 1fr auto;
+          align-items: center;
+          padding: 20px 0;
+          border-bottom: 1px solid #e5e0d8;
+          position: relative;
+        }
+
+        .cart-product {
+          display: flex;
+          align-items: center;
+          gap: 16px;
+          min-width: 0;
+        }
+
+        .cart-image {
+          position: relative;
+          width: 64px;
+          height: 64px;
+          flex-shrink: 0;
+        }
+
+        .cart-product-info {
+          min-width: 0;
+        }
+
+        .cart-product-title {
+          display: block;
+          font-family: var(--font-playfair), serif;
+        }
+
+        .cart-size {
+          display: block;
+          font-size: 12px;
+          color: var(--gray-text);
+          margin-top: 5px;
+        }
+
+        .cart-price,
+        .cart-item-total {
+          font-size: 14px;
+        }
+
+        .cart-quantity {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+        }
+
+        .qty-button {
+          width: 28px;
+          height: 28px;
+          border: 1px solid #d9d3c7;
+          background: #fff;
+          cursor: pointer;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          padding: 0;
+          font-size: 15px;
+          line-height: 1;
+        }
+
+        .qty-number {
+          min-width: 18px;
+          text-align: center;
+        }
+
+        .cart-remove {
+          background: none;
+          border: none;
+          cursor: pointer;
+          color: var(--gray-text);
+          font-size: 20px;
+          padding: 8px;
+        }
+
+        .mobile-price,
+        .mobile-quantity {
+          display: none;
+        }
+
+        .continue-shopping {
+          display: inline-block;
+          margin-top: 20px;
+          color: var(--gray-text);
+          font-size: 14px;
+        }
+
+        .cart-summary {
+          flex: 1 1 280px;
+          background: var(--cream);
+          border: 1px solid #e5e0d8;
+          padding: 28px;
+          box-sizing: border-box;
+        }
+
+        .cart-summary h3 {
+          font-family: var(--font-playfair), serif;
+          margin: 0 0 20px;
+        }
+
+        .summary-row {
+          display: flex;
+          justify-content: space-between;
+          margin-bottom: 12px;
+        }
+
+        .total-row {
+          font-weight: 600;
+          border-top: 1px solid #e5e0d8;
+          padding-top: 12px;
+          margin-bottom: 20px;
+        }
+
+        .checkout-link {
+          display: block;
+          width: 100%;
+          box-sizing: border-box;
+          padding: 14px;
+          background: var(--black);
+          color: #fff;
+          text-align: center;
+          text-decoration: none;
+        }
+
+        .delivery-note {
+          font-size: 12px;
+          color: var(--gray-text);
+          margin: 12px 0 0;
+          text-align: center;
+        }
+
+        @media (max-width: 768px) {
+          .cart-page {
+            padding: 52px 34px;
+          }
+
+          .cart-title {
+            font-size: 38px;
+            margin-bottom: 48px;
+          }
+
+          .cart-layout {
+            display: block;
+          }
+
+          .cart-header {
+            display: none;
+          }
+
+          .cart-item {
+            display: grid;
+            grid-template-columns: 104px minmax(0, 1fr) auto;
+            gap: 22px;
+            align-items: start;
+            padding: 24px 0 28px;
+          }
+
+          .cart-product {
+            display: contents;
+          }
+
+          .cart-image {
+            width: 104px;
+            height: 104px;
+            grid-column: 1;
+          }
+
+          .cart-product-info {
+            grid-column: 2;
+            padding-top: 3px;
+          }
+
+          .cart-product-title {
+            font-size: 20px;
+            line-height: 1.3;
+          }
+
+          .cart-size {
+            font-size: 13px;
+            margin-top: 8px;
+            line-height: 1.4;
+          }
+
+          .mobile-price {
+            display: block;
+            font-size: 17px;
+            margin-top: 8px;
+          }
+
+          .mobile-quantity {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 16px;
+          }
+
+          .mobile-quantity .qty-button {
+            width: 34px;
+            height: 34px;
+          }
+
+          .cart-price,
+          .cart-quantity {
+            display: none;
+          }
+
+          .cart-item-total {
+            grid-column: 3;
+            align-self: end;
+            padding-bottom: 7px;
+            font-size: 18px;
+            font-weight: 500;
+            white-space: nowrap;
+          }
+
+          .cart-remove {
+            position: absolute;
+            top: 17px;
+            right: 0;
+            font-size: 21px;
+          }
+
+          .continue-shopping {
+            margin-top: 24px;
+          }
+
+          .cart-summary {
+            width: 100%;
+            margin-top: 70px;
+          }
+        }
+
+        @media (max-width: 430px) {
+          .cart-page {
+            padding-left: 24px;
+            padding-right: 24px;
+          }
+
+          .cart-item {
+            grid-template-columns: 94px minmax(0, 1fr) auto;
+            gap: 16px;
+          }
+
+          .cart-image {
+            width: 94px;
+            height: 94px;
+          }
+
+          .cart-product-title {
+            font-size: 18px;
+            padding-right: 12px;
+          }
+
+          .cart-item-total {
+            font-size: 16px;
+          }
+        }
+      `}</style>
+    </>
   );
 }
-
-const qtyBtn = {
-  width: "24px",
-  height: "24px",
-  border: "1px solid #D9D3C7",
-  background: "#fff",
-  cursor: "pointer",
-};
