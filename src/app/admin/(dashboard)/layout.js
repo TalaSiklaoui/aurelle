@@ -12,8 +12,10 @@ export default function DashboardLayout({ children }) {
         <main className="admin-main">
           <div className="admin-content">{children}</div>
 
+          {/* MOBILE-ONLY LOGOUT */}
           <div className="logout-area">
             <button
+              type="button"
               onClick={() => signOut({ callbackUrl: "/admin/login" })}
               className="logout-button"
             >
@@ -46,18 +48,9 @@ export default function DashboardLayout({ children }) {
           box-sizing: border-box;
         }
 
+        /* Hidden on desktop */
         .logout-area {
-          padding: 0 40px 40px;
-        }
-
-        .logout-button {
-          background: var(--black);
-          color: white;
-          border: none;
-          padding: 14px 32px;
-          font-size: 12px;
-          letter-spacing: 1.5px;
-          cursor: pointer;
+          display: none;
         }
 
         @media (max-width: 768px) {
@@ -74,7 +67,9 @@ export default function DashboardLayout({ children }) {
             padding: 40px 20px;
           }
 
+          /* Visible only on mobile */
           .logout-area {
+            display: block;
             width: 100%;
             padding: 20px 20px 40px;
             box-sizing: border-box;
@@ -83,6 +78,12 @@ export default function DashboardLayout({ children }) {
           .logout-button {
             width: 100%;
             padding: 16px;
+            background: var(--black);
+            color: white;
+            border: none;
+            font-size: 12px;
+            letter-spacing: 1.5px;
+            cursor: pointer;
           }
         }
       `}</style>

@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { signOut } from "next-auth/react";
 import { useState } from "react";
 
 const navItems = [
@@ -20,11 +21,15 @@ export default function AdminSidebar() {
     return pathname.startsWith(href);
   };
 
+  const handleLogout = async () => {
+    await signOut({ callbackUrl: "/admin/login" });
+  };
+
   return (
     <>
       {/* DESKTOP SIDEBAR */}
       <aside className="admin-desktop-sidebar">
-        <div>
+        <div className="admin-desktop-top">
           <div className="admin-desktop-logo">
             <h2>AURELLE</h2>
             <p>ADMIN</p>
@@ -44,6 +49,15 @@ export default function AdminSidebar() {
             ))}
           </nav>
         </div>
+
+        {/* DESKTOP-ONLY LOGOUT */}
+        <button
+          type="button"
+          className="admin-desktop-logout"
+          onClick={handleLogout}
+        >
+          LOG OUT
+        </button>
       </aside>
 
       {/* MOBILE HEADER */}
@@ -106,6 +120,14 @@ export default function AdminSidebar() {
           position: sticky;
           top: 0;
           box-sizing: border-box;
+
+          display: flex;
+          flex-direction: column;
+          justify-content: space-between;
+        }
+
+        .admin-desktop-top {
+          width: 100%;
         }
 
         .admin-desktop-logo {
@@ -142,7 +164,38 @@ export default function AdminSidebar() {
           background: rgba(201, 162, 75, 0.12);
         }
 
-        /* Hide mobile nav on desktop */
+        /* DESKTOP LOGOUT */
+
+        .admin-desktop-logout {
+          width: 100%;
+          padding: 12px 14px;
+          background: transparent;
+          border: 1px solid #444;
+          border-radius: 4px;
+          color: #ccc;
+          font-family: inherit;
+          font-size: 12px;
+          letter-spacing: 1.5px;
+          cursor: pointer;
+
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          text-align: center;
+
+          transition:
+            color 0.2s ease,
+            border-color 0.2s ease,
+            background 0.2s ease;
+        }
+
+        .admin-desktop-logout:hover {
+          color: var(--gold);
+          border-color: var(--gold);
+          background: rgba(201, 162, 75, 0.08);
+        }
+
+        /* Hide mobile navbar on desktop */
 
         .admin-mobile-header {
           display: none;
