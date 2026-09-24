@@ -5,41 +5,52 @@ import { createContext, useContext, useState, useEffect } from "react";
 const CartContext = createContext();
 
 export function CartProvider({ children }) {
-  const [cartItems, setCartItems] = useState(() => {
-    if (typeof window === "undefined") return [];
-
-    try {
-      const saved = localStorage.getItem("aurelle_cart");
-      return saved ? JSON.parse(saved) : [];
-    } catch {
-      return [];
-    }
-  });
-
+  // IMPORTANT:
+  // Server and first client render both start with []
+  const [cartItems, setCartItems] = useState([]);
   const [loaded, setLoaded] = useState(false);
 
+  // Load cart from localStorage only AFTER hydration
   useEffect(() => {
-    const timeout = setTimeout(() => {
-      setLoaded(true);
-    }, 0);
+    try {
+      const saved = localStorage.getItem("aurelle_cart");
 
-    return () => clearTimeout(timeout);
+      if (saved) {
+        setCartItems(JSON.parse(saved));
+      }
+    } catch (error) {
+      console.error("Could not load cart:", error);
+    }
+
+    setLoaded(true);
   }, []);
 
+  // Save changes only after the original cart has been loaded
   useEffect(() => {
-    if (loaded) {
+    if (!loaded) return;
+
+    try {
       localStorage.setItem("aurelle_cart", JSON.stringify(cartItems));
+    } catch (error) {
+      console.error("Could not save cart:", error);
     }
   }, [cartItems, loaded]);
 
-  const addToCart = (product, quantity = 1) => {
+  const addToCart = (product, quantity = 1, size = null) => {
     setCartItems((prev) => {
-      const existing = prev.find((item) => item.id === product.id);
+      // Same product + same size = same cart item
+      const existing = prev.find(
+        (item) =>
+          item.id === product.id && (item.size || null) === (size || null),
+      );
 
       if (existing) {
         return prev.map((item) =>
-          item.id === product.id
-            ? { ...item, quantity: item.quantity + quantity }
+          item.id === product.id && (item.size || null) === (size || null)
+            ? {
+                ...item,
+                quantity: item.quantity + quantity,
+              }
             : item,
         );
       }
@@ -52,24 +63,41 @@ export function CartProvider({ children }) {
           price: product.price,
           image: product.image,
           quantity,
+          size: size || null,
         },
       ];
     });
   };
 
-  const removeFromCart = (id) => {
-    setCartItems((prev) => prev.filter((item) => item.id !== id));
-  };
-
-  const updateQuantity = (id, quantity) => {
-    if (quantity < 1) return removeFromCart(id);
-
+  const removeFromCart = (id, size = null) => {
     setCartItems((prev) =>
-      prev.map((item) => (item.id === id ? { ...item, quantity } : item)),
+      prev.filter(
+        (item) => !(item.id === id && (item.size || null) === (size || null)),
+      ),
     );
   };
 
-  const clearCart = () => setCartItems([]);
+  const updateQuantity = (id, quantity, size = null) => {
+    if (quantity < 1) {
+      removeFromCart(id, size);
+      return;
+    }
+
+    setCartItems((prev) =>
+      prev.map((item) =>
+        item.id === id && (item.size || null) === (size || null)
+          ? {
+              ...item,
+              quantity,
+            }
+          : item,
+      ),
+    );
+  };
+
+  const clearCart = () => {
+    setCartItems([]);
+  };
 
   const cartTotal = cartItems.reduce(
     (sum, item) => sum + item.price * item.quantity,
@@ -88,6 +116,7 @@ export function CartProvider({ children }) {
         clearCart,
         cartTotal,
         itemCount,
+        loaded,
       }}
     >
       {children}

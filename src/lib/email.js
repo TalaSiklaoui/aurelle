@@ -67,6 +67,7 @@ export async function sendOrderConfirmationEmail(order) {
         <tr>
           <td style="padding: 8px 0;">
             ${item.title} × ${item.quantity}
+            ${item.size ? `<br><span style="font-size: 12px; color: #666;">Size: ${item.size}</span>` : ""}
           </td>
 
           <td style="padding: 8px 0; text-align: right;">

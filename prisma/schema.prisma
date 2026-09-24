@@ -42,6 +42,7 @@ model OrderItem {
   title     String
   price     Float
   quantity  Int
+  size      String?
 }
 
 model AdminUser {

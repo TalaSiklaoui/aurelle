@@ -11,9 +11,11 @@ export default function CartPage() {
     return (
       <div style={{ padding: "80px 40px", textAlign: "center" }}>
         <h1 style={{ fontFamily: "var(--font-playfair), serif" }}>Your Cart</h1>
+
         <p style={{ color: "var(--gray-text)", marginTop: "16px" }}>
           Your cart is empty.
         </p>
+
         <Link
           href="/shop"
           style={{ color: "var(--gold)", textDecoration: "underline" }}
@@ -78,7 +80,7 @@ export default function CartPage() {
           {/* CART ITEMS */}
           {cartItems.map((item) => (
             <div
-              key={item.id}
+              key={`${item.id}-${item.size || "default"}`}
               className="cart-item"
               style={{
                 display: "grid",
@@ -113,13 +115,29 @@ export default function CartPage() {
                   />
                 </div>
 
-                <span
-                  style={{
-                    fontFamily: "var(--font-playfair), serif",
-                  }}
-                >
-                  {item.title}
-                </span>
+                <div>
+                  <span
+                    style={{
+                      fontFamily: "var(--font-playfair), serif",
+                      display: "block",
+                    }}
+                  >
+                    {item.title}
+                  </span>
+
+                  {item.size && (
+                    <span
+                      style={{
+                        display: "block",
+                        fontSize: "12px",
+                        color: "var(--gray-text)",
+                        marginTop: "4px",
+                      }}
+                    >
+                      Size: {item.size}
+                    </span>
+                  )}
+                </div>
               </div>
 
               {/* PRICE */}
@@ -135,7 +153,9 @@ export default function CartPage() {
                 }}
               >
                 <button
-                  onClick={() => updateQuantity(item.id, item.quantity - 1)}
+                  onClick={() =>
+                    updateQuantity(item.id, item.size, item.quantity - 1)
+                  }
                   style={qtyBtn}
                   aria-label={`Decrease ${item.title} quantity`}
                 >
@@ -145,7 +165,9 @@ export default function CartPage() {
                 <span>{item.quantity}</span>
 
                 <button
-                  onClick={() => updateQuantity(item.id, item.quantity + 1)}
+                  onClick={() =>
+                    updateQuantity(item.id, item.size, item.quantity + 1)
+                  }
                   style={qtyBtn}
                   aria-label={`Increase ${item.title} quantity`}
                 >
@@ -161,7 +183,7 @@ export default function CartPage() {
               {/* REMOVE */}
               <button
                 className="cart-remove"
-                onClick={() => removeFromCart(item.id)}
+                onClick={() => removeFromCart(item.id, item.size)}
                 aria-label={`Remove ${item.title} from cart`}
                 style={{
                   background: "none",

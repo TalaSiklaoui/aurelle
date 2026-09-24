@@ -54,6 +54,7 @@ export async function POST(request) {
           title: item.title,
           price: item.price,
           quantity: item.quantity,
+          size: item.size || null,
         })),
       },
     },

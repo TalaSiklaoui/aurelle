@@ -25,24 +25,31 @@ export default function CheckoutPage() {
 
   useEffect(() => {
     async function autofill() {
-      const session = await getSession();
+      try {
+        const session = await getSession();
 
-      if (session?.user?.role !== "customer") return;
+        if (session?.user?.role !== "customer") return;
 
-      const res = await fetch("/api/customers/last-order");
-      const data = await res.json();
+        const res = await fetch("/api/customers/last-order");
 
-      setForm((f) => ({
-        ...f,
-        email: session.user.email || f.email,
-        fullName: data.order?.fullName || session.user.name || f.fullName,
-        address: data.order?.address || f.address,
-        apartment: data.order?.apartment || f.apartment,
-        city: data.order?.city || f.city,
-        postalCode: data.order?.postalCode || f.postalCode,
-        country: data.order?.country || f.country,
-        phone: data.order?.phone || f.phone,
-      }));
+        if (!res.ok) return;
+
+        const data = await res.json();
+
+        setForm((f) => ({
+          ...f,
+          email: session.user.email || f.email,
+          fullName: data.order?.fullName || session.user.name || f.fullName,
+          address: data.order?.address || f.address,
+          apartment: data.order?.apartment || f.apartment,
+          city: data.order?.city || f.city,
+          postalCode: data.order?.postalCode || f.postalCode,
+          country: data.order?.country || f.country,
+          phone: data.order?.phone || f.phone,
+        }));
+      } catch (error) {
+        console.error("Checkout autofill failed:", error);
+      }
     }
 
     autofill();
@@ -94,11 +101,14 @@ export default function CheckoutPage() {
         }),
       });
 
-      if (!res.ok) throw new Error("Order failed");
+      if (!res.ok) {
+        throw new Error("Order failed");
+      }
 
       clearCart();
       router.push("/order-confirmation");
     } catch (err) {
+      console.error("Order error:", err);
       alert("Something went wrong placing your order. Please try again.");
       setSubmitting(false);
     }
@@ -329,6 +339,7 @@ export default function CheckoutPage() {
               style={{
                 ...placeOrderBtnStyle,
                 opacity: submitting ? 0.6 : 1,
+                cursor: submitting ? "not-allowed" : "pointer",
               }}
             >
               {submitting ? "Placing Order..." : "Place Order"}
@@ -356,7 +367,7 @@ export default function CheckoutPage() {
 
           {cartItems.map((item) => (
             <div
-              key={item.id}
+              key={`${item.id}-${item.size || "default"}`}
               style={{
                 display: "flex",
                 alignItems: "center",
@@ -392,11 +403,23 @@ export default function CheckoutPage() {
                   {item.title}
                 </p>
 
+                {item.size && (
+                  <p
+                    style={{
+                      fontSize: "12px",
+                      color: "var(--gray-text)",
+                      margin: "2px 0 0",
+                    }}
+                  >
+                    Size: {item.size}
+                  </p>
+                )}
+
                 <p
                   style={{
                     fontSize: "12px",
                     color: "var(--gray-text)",
-                    margin: 0,
+                    margin: "2px 0 0",
                   }}
                 >
                   Qty {item.quantity}
@@ -404,7 +427,7 @@ export default function CheckoutPage() {
               </div>
 
               <span style={{ fontSize: "13px" }}>
-                ${item.price * item.quantity}
+                ${(item.price * item.quantity).toFixed(2)}
               </span>
             </div>
           ))}
@@ -435,7 +458,6 @@ export default function CheckoutPage() {
               }}
             >
               <span>Delivery</span>
-
               <span>{shippingCost === 0 ? "Free" : `$${shippingCost}`}</span>
             </div>
 

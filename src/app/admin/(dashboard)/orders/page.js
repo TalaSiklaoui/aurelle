@@ -85,7 +85,24 @@ export default async function OrdersPage() {
                     }}
                   >
                     <span>
-                      {item.title} × {item.quantity}
+                      <div>
+                        <span>
+                          {item.title} × {item.quantity}
+                        </span>
+
+                        {item.size && (
+                          <span
+                            style={{
+                              display: "block",
+                              fontSize: "12px",
+                              color: "var(--gray-text)",
+                              marginTop: "2px",
+                            }}
+                          >
+                            Size: {item.size}
+                          </span>
+                        )}
+                      </div>
                     </span>
                     <span style={{ color: "var(--gray-text)" }}>
                       ${(item.price * item.quantity).toFixed(2)}

@@ -4,25 +4,104 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useCart } from "@/context/CartContext";
 
+const ringSizes = ["5", "6", "7", "8", "9"];
+
 export default function ProductActions({ product }) {
   const [quantity, setQuantity] = useState(1);
+  const [selectedSize, setSelectedSize] = useState("");
+  const [sizeError, setSizeError] = useState(false);
   const [added, setAdded] = useState(false);
+
   const { addToCart } = useCart();
   const router = useRouter();
 
+  const isRing = product.category === "Rings";
+
   const handleAddToCart = () => {
-    addToCart(product, quantity);
+    if (isRing && !selectedSize) {
+      setSizeError(true);
+      return;
+    }
+
+    setSizeError(false);
+    addToCart(product, quantity, isRing ? selectedSize : null);
+
     setAdded(true);
     setTimeout(() => setAdded(false), 1500);
   };
 
   const handleBuyNow = () => {
-    addToCart(product, quantity);
+    if (isRing && !selectedSize) {
+      setSizeError(true);
+      return;
+    }
+
+    setSizeError(false);
+    addToCart(product, quantity, isRing ? selectedSize : null);
     router.push("/checkout");
   };
 
   return (
     <>
+      {isRing && (
+        <>
+          <p
+            style={{
+              fontSize: "12px",
+              letterSpacing: "1px",
+              textTransform: "uppercase",
+              marginBottom: "10px",
+            }}
+          >
+            Ring Size
+          </p>
+
+          <div
+            style={{
+              display: "flex",
+              flexWrap: "wrap",
+              gap: "8px",
+              marginBottom: sizeError ? "8px" : "24px",
+            }}
+          >
+            {ringSizes.map((size) => (
+              <button
+                key={size}
+                type="button"
+                onClick={() => {
+                  setSelectedSize(size);
+                  setSizeError(false);
+                }}
+                style={{
+                  width: "44px",
+                  height: "44px",
+                  backgroundColor:
+                    selectedSize === size ? "var(--black)" : "transparent",
+                  color: selectedSize === size ? "#fff" : "var(--black)",
+                  border: "1px solid var(--black)",
+                  cursor: "pointer",
+                  fontSize: "13px",
+                }}
+              >
+                {size}
+              </button>
+            ))}
+          </div>
+
+          {sizeError && (
+            <p
+              style={{
+                color: "#b23b3b",
+                fontSize: "12px",
+                marginBottom: "20px",
+              }}
+            >
+              Please select a ring size.
+            </p>
+          )}
+        </>
+      )}
+
       <p
         style={{
           fontSize: "12px",
@@ -33,6 +112,7 @@ export default function ProductActions({ product }) {
       >
         Quantity
       </p>
+
       <div
         style={{
           display: "flex",
@@ -45,6 +125,7 @@ export default function ProductActions({ product }) {
         }}
       >
         <button
+          type="button"
           onClick={() => setQuantity((q) => Math.max(1, q - 1))}
           style={{
             background: "none",
@@ -55,8 +136,11 @@ export default function ProductActions({ product }) {
         >
           −
         </button>
+
         <span>{quantity}</span>
+
         <button
+          type="button"
           onClick={() => setQuantity((q) => q + 1)}
           style={{
             background: "none",
@@ -70,6 +154,7 @@ export default function ProductActions({ product }) {
       </div>
 
       <button
+        type="button"
         onClick={handleAddToCart}
         style={{
           backgroundColor: "var(--black)",
@@ -88,6 +173,7 @@ export default function ProductActions({ product }) {
       </button>
 
       <button
+        type="button"
         onClick={handleBuyNow}
         style={{
           backgroundColor: "transparent",
