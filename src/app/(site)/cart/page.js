@@ -36,7 +36,6 @@ export default function CartPage() {
         <h1 className="cart-title">Your Cart</h1>
 
         <div className="cart-layout">
-          {/* CART PRODUCTS */}
           <div className="cart-products">
             {/* DESKTOP HEADER */}
             <div className="cart-header">
@@ -60,7 +59,7 @@ export default function CartPage() {
                       src={item.image}
                       alt={item.title}
                       fill
-                      sizes="(max-width: 768px) 104px, 64px"
+                      sizes="(max-width: 768px) 90px, 64px"
                       style={{ objectFit: "cover" }}
                     />
                   </div>
@@ -72,36 +71,50 @@ export default function CartPage() {
                       <span className="cart-size">Size: {item.size}</span>
                     )}
 
-                    {/* Mobile price */}
+                    {/* MOBILE PRICE */}
                     <span className="mobile-price">
                       ${item.price.toFixed(2)}
                     </span>
 
-                    {/* Mobile quantity */}
-                    <div className="mobile-quantity">
-                      <button
-                        type="button"
-                        onClick={() =>
-                          updateQuantity(item.id, item.quantity - 1, item.size)
-                        }
-                        className="qty-button"
-                        aria-label={`Decrease ${item.title} quantity`}
-                      >
-                        −
-                      </button>
+                    {/* MOBILE BOTTOM ROW */}
+                    <div className="mobile-item-bottom">
+                      <div className="mobile-quantity">
+                        <button
+                          type="button"
+                          onClick={() =>
+                            updateQuantity(
+                              item.id,
+                              item.quantity - 1,
+                              item.size,
+                            )
+                          }
+                          className="qty-button"
+                          aria-label={`Decrease ${item.title} quantity`}
+                        >
+                          −
+                        </button>
 
-                      <span className="qty-number">{item.quantity}</span>
+                        <span className="qty-number">{item.quantity}</span>
 
-                      <button
-                        type="button"
-                        onClick={() =>
-                          updateQuantity(item.id, item.quantity + 1, item.size)
-                        }
-                        className="qty-button"
-                        aria-label={`Increase ${item.title} quantity`}
-                      >
-                        +
-                      </button>
+                        <button
+                          type="button"
+                          onClick={() =>
+                            updateQuantity(
+                              item.id,
+                              item.quantity + 1,
+                              item.size,
+                            )
+                          }
+                          className="qty-button"
+                          aria-label={`Increase ${item.title} quantity`}
+                        >
+                          +
+                        </button>
+                      </div>
+
+                      <span className="mobile-total">
+                        ${(item.price * item.quantity).toFixed(2)}
+                      </span>
                     </div>
                   </div>
                 </div>
@@ -136,7 +149,7 @@ export default function CartPage() {
                   </button>
                 </div>
 
-                {/* TOTAL */}
+                {/* DESKTOP TOTAL */}
                 <span className="cart-item-total">
                   ${(item.price * item.quantity).toFixed(2)}
                 </span>
@@ -302,7 +315,9 @@ export default function CartPage() {
         }
 
         .mobile-price,
-        .mobile-quantity {
+        .mobile-item-bottom,
+        .mobile-quantity,
+        .mobile-total {
           display: none;
         }
 
@@ -357,14 +372,18 @@ export default function CartPage() {
           text-align: center;
         }
 
+        /* =========================
+           MOBILE
+        ========================= */
+
         @media (max-width: 768px) {
           .cart-page {
-            padding: 52px 34px;
+            padding: 48px 24px 60px;
           }
 
           .cart-title {
             font-size: 38px;
-            margin-bottom: 48px;
+            margin-bottom: 40px;
           }
 
           .cart-layout {
@@ -376,111 +395,136 @@ export default function CartPage() {
           }
 
           .cart-item {
-            display: grid;
-            grid-template-columns: 104px minmax(0, 1fr) auto;
-            gap: 22px;
-            align-items: start;
-            padding: 24px 0 28px;
+            display: block;
+            padding: 24px 0;
           }
 
           .cart-product {
-            display: contents;
+            display: grid;
+            grid-template-columns: 90px minmax(0, 1fr);
+            gap: 18px;
+            align-items: start;
           }
 
           .cart-image {
-            width: 104px;
-            height: 104px;
-            grid-column: 1;
+            width: 90px;
+            height: 90px;
           }
 
           .cart-product-info {
-            grid-column: 2;
-            padding-top: 3px;
+            min-width: 0;
+            padding-right: 25px;
           }
 
           .cart-product-title {
-            font-size: 20px;
-            line-height: 1.3;
+            font-size: 19px;
+            line-height: 1.25;
+            padding-right: 5px;
           }
 
           .cart-size {
             font-size: 13px;
-            margin-top: 8px;
-            line-height: 1.4;
+            margin-top: 7px;
           }
 
           .mobile-price {
             display: block;
-            font-size: 17px;
-            margin-top: 8px;
+            font-size: 16px;
+            margin-top: 7px;
+          }
+
+          .mobile-item-bottom {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            margin-top: 16px;
           }
 
           .mobile-quantity {
             display: flex;
             align-items: center;
-            gap: 10px;
-            margin-top: 16px;
+            gap: 9px;
+          }
+
+          .mobile-total {
+            display: block;
+            font-size: 17px;
+            font-weight: 500;
+            white-space: nowrap;
           }
 
           .mobile-quantity .qty-button {
-            width: 34px;
-            height: 34px;
+            width: 32px;
+            height: 32px;
           }
 
           .cart-price,
-          .cart-quantity {
-            display: none;
-          }
-
+          .cart-quantity,
           .cart-item-total {
-            grid-column: 3;
-            align-self: end;
-            padding-bottom: 7px;
-            font-size: 18px;
-            font-weight: 500;
-            white-space: nowrap;
+            display: none;
           }
 
           .cart-remove {
             position: absolute;
             top: 17px;
             right: 0;
-            font-size: 21px;
+            font-size: 20px;
+            z-index: 2;
           }
 
           .continue-shopping {
-            margin-top: 24px;
+            margin-top: 22px;
+            font-size: 14px;
           }
 
           .cart-summary {
             width: 100%;
-            margin-top: 70px;
+            margin-top: 55px;
+            padding: 26px 22px;
           }
         }
 
-        @media (max-width: 430px) {
+        /* EXTRA SMALL PHONES */
+        @media (max-width: 390px) {
           .cart-page {
-            padding-left: 24px;
-            padding-right: 24px;
+            padding-left: 18px;
+            padding-right: 18px;
           }
 
-          .cart-item {
-            grid-template-columns: 94px minmax(0, 1fr) auto;
-            gap: 16px;
+          .cart-title {
+            font-size: 34px;
+          }
+
+          .cart-product {
+            grid-template-columns: 82px minmax(0, 1fr);
+            gap: 14px;
           }
 
           .cart-image {
-            width: 94px;
-            height: 94px;
+            width: 82px;
+            height: 82px;
           }
 
           .cart-product-title {
             font-size: 18px;
-            padding-right: 12px;
           }
 
-          .cart-item-total {
+          .mobile-item-bottom {
+            gap: 10px;
+          }
+
+          .mobile-total {
             font-size: 16px;
+          }
+
+          .mobile-quantity {
+            gap: 6px;
+          }
+
+          .mobile-quantity .qty-button {
+            width: 30px;
+            height: 30px;
           }
         }
       `}</style>
